@@ -407,7 +407,7 @@ export const deleteProduct = async (id: string): Promise<boolean> => {
 
     await client.query("COMMIT")
 
-    return result.rowCount > 0
+    return (result.rowCount ?? 0) > 0
   } catch (error) {
     await client.query("ROLLBACK")
     console.error("خطأ في حذف المنتج:", error)
@@ -590,7 +590,7 @@ export const deleteDistributionCenter = async (id: string): Promise<boolean> => 
 
     await client.query("COMMIT")
 
-    return result.rowCount > 0
+    return (result.rowCount ?? 0) > 0
   } catch (error) {
     await client.query("ROLLBACK")
     console.error("خطأ في حذف مركز التوزيع:", error)
@@ -758,7 +758,7 @@ export const deleteSale = async (id: string): Promise<boolean> => {
 
     await client.query("COMMIT")
 
-    return result.rowCount > 0
+    return (result.rowCount ?? 0) > 0
   } catch (error) {
     await client.query("ROLLBACK")
     console.error("خطأ في حذف عملية البيع:", error)
@@ -1140,7 +1140,7 @@ export const deleteCustomReport = async (id: string): Promise<boolean> => {
       `DELETE FROM custom_reports WHERE id = $1`,
       [id],
     )
-    return result.rowCount > 0
+    return (result.rowCount ?? 0) > 0
   } catch (error) {
     console.error("خطأ في حذف التقرير المخصص:", error)
     throw error
