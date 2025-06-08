@@ -8,7 +8,7 @@ BRANCH="main"
 
 # التحقق من وجود المتطلبات
 echo "التحقق من المتطلبات..."
-for cmd in git node npm; do
+for cmd in git node pnpm; do
     if ! command -v $cmd &> /dev/null; then
         echo "$cmd غير مثبت. الرجاء تثبيته قبل المتابعة."
         exit 1
@@ -36,7 +36,7 @@ fi
 
 # تثبيت الاعتماديات
 echo "تثبيت الاعتماديات..."
-npm ci
+pnpm install
 
 # إنشاء ملف .env إذا لم يكن موجودًا
 if [ ! -f "$APP_DIR/.env" ]; then
@@ -62,7 +62,7 @@ fi
 
 # بناء التطبيق
 echo "بناء التطبيق..."
-npm run build
+pnpm run build
 
 # تهيئة قاعدة البيانات
 echo "هل تريد تهيئة قاعدة البيانات؟ (y/n)"
@@ -75,7 +75,7 @@ fi
 # إعداد PM2 إذا لم يكن موجودًا
 if ! command -v pm2 &> /dev/null; then
     echo "تثبيت PM2..."
-    npm install -g pm2
+    pnpm add -g pm2
 fi
 
 # إنشاء ملف تكوين PM2
@@ -83,7 +83,7 @@ cat > ecosystem.config.js << EOL
 module.exports = {
   apps: [{
     name: "$APP_NAME",
-    script: "npm",
+    script: "pnpm",
     args: "start",
     instances: "max",
     exec_mode: "cluster",

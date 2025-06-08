@@ -2,8 +2,13 @@
 
 # تكوين المتغيرات
 APP_NAME="accounting-system"
-DOMAIN="your-domain.com"  # قم بتغيير هذا إلى اسم النطاق الخاص بك
+# اسم النطاق اختياري. الافتراضي هو localhost ويمكن تعديله لاحقًا
+DOMAIN=${DOMAIN:-localhost}
 USE_SSL=${USE_SSL:-false}
+
+# السماح بتحديد نطاق مخصص عند التشغيل
+read -p "أدخل اسم النطاق (الافتراضي: $DOMAIN): " DOMAIN_INPUT
+DOMAIN=${DOMAIN_INPUT:-$DOMAIN}
 
 # التحقق من تثبيت Nginx
 if ! command -v nginx &> /dev/null; then

@@ -247,7 +247,7 @@ export const getProducts = async (): Promise<Product[]> => {
       FROM products
       ORDER BY name
     `)
-    return result.rows.map((row) => ({
+    return result.rows.map((row: any) => ({
       id: row.id.toString(),
       name: row.name,
       description: row.description || "",
@@ -442,7 +442,7 @@ export const getDistributionCenters = async (): Promise<DistributionCenter[]> =>
       ORDER BY name
     `)
 
-    return result.rows.map((row) => ({
+    return result.rows.map((row: any) => ({
       id: row.id.toString(),
       name: row.name,
       address: row.address || "",
@@ -609,7 +609,7 @@ export const getSales = async (): Promise<Sale[]> => {
       ORDER BY sale_date DESC
     `)
 
-    return result.rows.map((row) => ({
+    return result.rows.map((row: any) => ({
       id: row.id.toString(),
       productId: row.product_id.toString(),
       centerId: row.center_id.toString(),
@@ -776,7 +776,7 @@ export const getInventory = async (): Promise<ProductInventory[]> => {
       FROM inventory
     `)
 
-    return result.rows.map((row) => ({
+    return result.rows.map((row: any) => ({
       id: `${row.product_id}-${row.center_id}`,
       productId: row.product_id.toString(),
       centerId: row.center_id.toString(),
@@ -850,7 +850,7 @@ export const getProductInventoryReport = async (productId: string): Promise<any[
       [productId],
     )
 
-    return result.rows.map((row) => ({
+    return result.rows.map((row: any) => ({
       id: `${row.product_id}-${row.center_id}`,
       productId: row.product_id.toString(),
       centerId: row.center_id.toString(),
@@ -880,7 +880,7 @@ export const getCenterInventoryReport = async (centerId: string): Promise<any[]>
       [centerId],
     )
 
-    return result.rows.map((row) => ({
+    return result.rows.map((row: any) => ({
       id: `${row.product_id}-${row.center_id}`,
       productId: row.product_id.toString(),
       centerId: row.center_id.toString(),
@@ -923,7 +923,7 @@ export const getSalesByCenterReport = async (
 
     const result = await pool.query(query, params)
 
-    return result.rows.map((row) => ({
+    return result.rows.map((row: any) => ({
       id: row.id.toString(),
       productId: row.product_id.toString(),
       centerId: row.center_id.toString(),
@@ -977,7 +977,7 @@ export const getInventoryLog = async (productId?: string, centerId?: string): Pr
 
     const result = await pool.query(query, params)
 
-    return result.rows.map((row) => ({
+    return result.rows.map((row: any) => ({
       id: row.id.toString(),
       productId: row.product_id.toString(),
       centerId: row.center_id.toString(),
@@ -1101,7 +1101,7 @@ export const getCustomReports = async (): Promise<CustomReport[]> => {
     const result = await pool.query(
       `SELECT id, name, type, columns, filters FROM custom_reports ORDER BY id`
     )
-    return result.rows.map((row) => ({
+    return result.rows.map((row: any) => ({
       id: row.id.toString(),
       name: row.name,
       type: row.type,
