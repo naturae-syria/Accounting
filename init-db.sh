@@ -25,4 +25,8 @@ done
 
 # Initialize the database
 echo "Initializing the database..."
+if [ ! -x node_modules/.bin/ts-node ]; then
+    echo "Node dependencies not installed. Attempting to install..."
+    pnpm install || true
+fi
 pnpm run init-db

@@ -49,6 +49,10 @@ cd "$APP_DIR"
 # تثبيت الاعتماديات
 echo "Installing dependencies..."
 pnpm install
+if [ ! -x node_modules/.bin/ts-node ]; then
+    echo "ts-node not found after install. Attempting global install..."
+    pnpm add -D ts-node || sudo npm install -g ts-node || true
+fi
 
 # إنشاء ملف .env
 echo "Creating .env file..."
