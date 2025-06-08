@@ -26,11 +26,11 @@ done
 
 # إعداد قاعدة البيانات
 echo "إعداد قاعدة البيانات..."
-./setup-db.sh
+bash setup-db.sh
 
 # إعداد Redis
 echo "إعداد Redis..."
-./setup-redis.sh
+bash setup-redis.sh
 
 # استنساخ المستودع
 echo "استنساخ المستودع..."
