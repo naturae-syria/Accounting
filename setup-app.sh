@@ -16,13 +16,13 @@ print_message() {
 
 # التحقق من وجود مجلد التطبيق
 if [ ! -d "app" ]; then
-  print_message "$RED" "خطأ: مجلد 'app' غير موجود. يرجى التأكد من تشغيل سكريبت 'install-all.sh' أولاً."
+print_message "$RED" "Error: 'app' directory not found. Please run 'install-all.sh' first."
   exit 1
 fi
 
 print_message "$BLUE" "
 =======================================================
-      إعداد كود التطبيق لنظام المحاسبة والتوزيع
+      Setting up application code for the accounting system
 =======================================================
 "
 
@@ -44,10 +44,10 @@ mkdir -p app/app/dashboard
 mkdir -p app/app/login
 mkdir -p app/public/images
 
-print_message "$GREEN" "✓ تم إنشاء هيكل المجلدات بنجاح"
+print_message "$GREEN" "✓ Folder structure created successfully"
 
 # نسخ ملفات التطبيق من المجلد الحالي إلى مجلد app
-print_message "$YELLOW" "جاري نسخ ملفات التطبيق..."
+print_message "$YELLOW" "Copying application files..."
 
 # قائمة بالملفات التي يجب نسخها
 FILES_TO_COPY=(
@@ -88,46 +88,46 @@ FILES_TO_COPY=(
   "tailwind.config.ts"
 )
 
-# نسخ الملفات إذا كانت موجودة
+# Copy files if they exist
 for file in "${FILES_TO_COPY[@]}"; do
   if [ -f "$file" ]; then
-    # إنشاء المجلد الهدف إذا لم يكن موجودًا
+    # Create target directory if it does not exist
     mkdir -p "app/$(dirname "$file")"
-    # نسخ الملف
+    # Copy the file
     cp "$file" "app/$file"
-    echo "تم نسخ: $file"
+    echo "Copied: $file"
   else
-    echo "تخطي: $file (غير موجود)"
+    echo "Skipped: $file (not found)"
   fi
 done
 
-# نسخ الصور إذا كانت موجودة
+# Copy images if they exist
 if [ -d "public/images" ]; then
   cp -r public/images/* app/public/images/
-  echo "تم نسخ: الصور"
+  echo "Copied: images"
 fi
 
-print_message "$GREEN" "✓ تم نسخ ملفات التطبيق بنجاح"
+print_message "$GREEN" "✓ Application files copied successfully"
 
 # بناء وتشغيل الحاويات
-print_message "$YELLOW" "جاري بناء وتشغيل الحاويات..."
+print_message "$YELLOW" "Building and starting containers..."
 docker-compose up -d --build
 
-print_message "$GREEN" "✓ تم بناء وتشغيل الحاويات بنجاح"
+print_message "$GREEN" "✓ Containers built and started successfully"
 
 # انتظار حتى تكون قاعدة البيانات جاهزة
-print_message "$YELLOW" "انتظار حتى تكون قاعدة البيانات جاهزة..."
+print_message "$YELLOW" "Waiting for the database to be ready..."
 sleep 10
 
-print_message "$GREEN" "✓ تم إعداد التطبيق بنجاح!"
+print_message "$GREEN" "✓ Application setup complete!"
 print_message "$BLUE" "
 =======================================================
-                معلومات الوصول
+                Access information
 =======================================================
 "
 
-print_message "$YELLOW" "يمكنك الوصول إلى التطبيق على: http://localhost:3000"
-print_message "$YELLOW" "يمكنك الوصول إلى التطبيق من خلال Nginx على: http://localhost"
+print_message "$YELLOW" "You can access the app at: http://localhost:3000"
+print_message "$YELLOW" "You can access the app through Nginx at: http://localhost"
 
 print_message "$BLUE" "
 للمزيد من المعلومات، راجع ملف 'connection-info.txt'
