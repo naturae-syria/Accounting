@@ -6,7 +6,7 @@ APP_DIR="/var/www/$APP_NAME"
 
 # التحقق من تثبيت PM2
 if ! command -v pm2 &> /dev/null; then
-    echo "PM2 غير مثبت. جاري التثبيت..."
+    echo "PM2 is not installed. Installing..."
     pnpm add -g pm2
 fi
 
@@ -36,11 +36,11 @@ module.exports = {
 EOL
 
 # تشغيل التطبيق باستخدام PM2
-echo "تشغيل التطبيق باستخدام PM2..."
+echo "Starting the application with PM2..."
 pm2 start ecosystem.config.js
 
 # تكوين PM2 للتشغيل عند بدء النظام
 pm2 save
 pm2 startup | grep -v "sudo" | bash
 
-echo "تم إعداد PM2 بنجاح!"
+echo "PM2 setup completed successfully!"

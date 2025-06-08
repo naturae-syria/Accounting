@@ -13,29 +13,29 @@ DOMAIN=${DOMAIN:-localhost}
 USE_SSL=${USE_SSL:-false}
 
 # السماح بتحديد نطاق مخصص عند التشغيل
-read -p "أدخل اسم النطاق (الافتراضي: $DOMAIN): " DOMAIN_INPUT
+read -p "Enter the domain name (default: $DOMAIN): " DOMAIN_INPUT
 DOMAIN=${DOMAIN_INPUT:-$DOMAIN}
 
 # التحقق من وجود المتطلبات
-echo "التحقق من المتطلبات..."
+echo "Checking requirements..."
 for cmd in git node pnpm; do
     if ! command -v $cmd &> /dev/null; then
-        echo "$cmd غير مثبت. جاري التثبيت..."
+        echo "$cmd is not installed. Installing..."
         sudo apt-get update
         sudo apt-get install -y $cmd
     fi
 done
 
 # إعداد قاعدة البيانات
-echo "إعداد قاعدة البيانات..."
+echo "Setting up the database..."
 ./setup-db.sh
 
 # إعداد Redis
-echo "إعداد Redis..."
+echo "Setting up Redis..."
 ./setup-redis.sh
 
 # استنساخ المستودع
-echo "استنساخ المستودع..."
+echo "Cloning the repository..."
 APP_DIR="/var/www/$APP_NAME"
 sudo mkdir -p "$APP_DIR"
 sudo chown $(whoami):$(whoami) "$APP_DIR"
@@ -43,11 +43,11 @@ git clone "$REPO_URL" "$APP_DIR"
 cd "$APP_DIR"
 
 # تثبيت الاعتماديات
-echo "تثبيت الاعتماديات..."
+echo "Installing dependencies..."
 pnpm install
 
 # إنشاء ملف .env
-echo "إنشاء ملف .env..."
+echo "Creating .env file..."
 cp .env.example .env
 # تحديث ملف .env بإعدادات قاعدة البيانات
 sed -i "s/DB_USER=.*/DB_USER=$DB_USER/" .env
@@ -57,34 +57,34 @@ sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=$DB_PASSWORD/" .env
 sed -i "s/DB_PORT=.*/DB_PORT=$DB_PORT/" .env
 
 # بناء التطبيق
-echo "بناء التطبيق..."
+echo "Building the application..."
 pnpm run build
 
 # إعداد PM2
-echo "إعداد PM2..."
+echo "Setting up PM2..."
 ./setup-pm2.sh
 
 # إعداد Nginx
-echo "إعداد Nginx..."
+echo "Setting up Nginx..."
 USE_SSL=$USE_SSL DOMAIN=$DOMAIN ./setup-nginx.sh
 
 # إعداد النسخ الاحتياطي
-echo "إعداد النسخ الاحتياطي..."
+echo "Setting up backups..."
 sudo cp backup-db.sh /usr/local/bin/
 sudo chmod +x /usr/local/bin/backup-db.sh
 # إضافة مهمة cron لتشغيل النسخ الاحتياطي يوميًا في الساعة 2 صباحًا
 (crontab -l 2>/dev/null; echo "0 2 * * * /usr/local/bin/backup-db.sh") | crontab -
 
 # إعداد Fail2Ban
-echo "إعداد Fail2Ban..."
+echo "Setting up Fail2Ban..."
 ./setup-fail2ban.sh
 
 # إعداد المراقبة
-echo "إعداد المراقبة..."
+echo "Setting up monitoring..."
 ./setup-monitoring.sh
 
-echo "تم إعداد النظام بنجاح!"
-echo "يمكنك الوصول إلى التطبيق على: http://$DOMAIN"
+echo "System setup completed successfully!"
+echo "You can access the application at: http://$DOMAIN"
 if [ "$USE_SSL" = "true" ]; then
-    echo "أو: https://$DOMAIN"
+    echo "Or: https://$DOMAIN"
 fi

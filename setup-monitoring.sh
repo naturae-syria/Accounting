@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # تثبيت Prometheus
-echo "تثبيت Prometheus..."
+echo "Installing Prometheus..."
 sudo apt-get update
 sudo apt-get install -y prometheus
 
 # تثبيت Grafana
-echo "تثبيت Grafana..."
+echo "Installing Grafana..."
 sudo apt-get install -y apt-transport-https software-properties-common
 sudo add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
 wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
@@ -39,7 +39,7 @@ sudo systemctl start prometheus
 sudo systemctl enable grafana-server
 sudo systemctl start grafana-server
 
-echo "تم إعداد Prometheus و Grafana بنجاح!"
-echo "يمكنك الوصول إلى Grafana على: http://your-server-ip:3000"
-echo "اسم المستخدم الافتراضي: admin"
-echo "كلمة المرور الافتراضية: admin"
+echo "Prometheus and Grafana set up successfully!"
+echo "You can access Grafana at: http://your-server-ip:3000"
+echo "Default username: admin"
+echo "Default password: admin"
