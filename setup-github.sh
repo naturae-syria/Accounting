@@ -109,7 +109,7 @@ cat > README.md << EOL
 
 4. تهيئة قاعدة البيانات:
    \`\`\`bash
-   pnpm run init-db
+   npm run init-db
    \`\`\`
 
 5. تشغيل التطبيق في وضع التطوير:

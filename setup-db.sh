@@ -42,6 +42,6 @@ export DB_PASSWORD=$DB_PASSWORD
 export DB_PORT=$DB_PORT
 
 # تشغيل سكريبت تهيئة قاعدة البيانات
-pnpm run init-db
+npm run init-db
 
 echo "تم إعداد قاعدة البيانات بنجاح!"
