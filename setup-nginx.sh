@@ -1,24 +1,24 @@
 #!/bin/bash
 
-# تكوين المتغيرات
+# Variable configuration
 APP_NAME="accounting-system"
-# اسم النطاق اختياري. الافتراضي هو localhost ويمكن تعديله لاحقًا
+# Optional domain name. Defaults to localhost and can be changed later
 DOMAIN=${DOMAIN:-localhost}
 USE_SSL=${USE_SSL:-false}
 
-# السماح بتحديد نطاق مخصص عند التشغيل
-read -p "أدخل اسم النطاق (الافتراضي: $DOMAIN): " DOMAIN_INPUT
+# Allow providing a custom domain when running the script
+read -p "Enter domain name (default: $DOMAIN): " DOMAIN_INPUT
 DOMAIN=${DOMAIN_INPUT:-$DOMAIN}
 
-# التحقق من تثبيت Nginx
+# Ensure Nginx is installed
 if ! command -v nginx &> /dev/null; then
-    echo "Nginx غير مثبت. جاري التثبيت..."
+    echo "Nginx is not installed. Installing..."
     sudo apt-get update
     sudo apt-get install -y nginx
 fi
 
-# إنشاء ملف تكوين Nginx
-echo "إنشاء ملف تكوين Nginx..."
+# Create Nginx configuration file
+echo "Creating Nginx configuration..."
 sudo tee /etc/nginx/sites-available/$APP_NAME > /dev/null << EOL
 server {
     listen 80;
@@ -36,7 +36,7 @@ server {
         proxy_set_header X-Forwarded-Proto \$scheme;
     }
     
-    # تكوين ضغط Gzip
+    # Gzip compression
     gzip on;
     gzip_comp_level 5;
     gzip_min_length 256;
@@ -51,7 +51,7 @@ server {
       text/plain
       text/xml;
     
-    # تخزين مؤقت للملفات الثابتة
+    # Cache static files
     location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
         expires 30d;
         add_header Cache-Control "public, no-transform";
@@ -59,23 +59,23 @@ server {
 }
 EOL
 
-# تفعيل موقع Nginx
+# Enable Nginx site
 sudo ln -sf /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl restart nginx
 
-# إعداد SSL إذا كان مطلوبًا
+# Configure SSL if requested
 if [ "$USE_SSL" = "true" ]; then
-    echo "إعداد SSL باستخدام Let's Encrypt..."
+    echo "Configuring SSL with Let's Encrypt..."
     
-    # التحقق من تثبيت Certbot
+    # Ensure Certbot is installed
     if ! command -v certbot &> /dev/null; then
-        echo "Certbot غير مثبت. جاري التثبيت..."
+        echo "Certbot is not installed. Installing..."
         sudo apt-get update
         sudo apt-get install -y certbot python3-certbot-nginx
     fi
     
-    # الحصول على شهادة SSL
+    # Obtain SSL certificate
     sudo certbot --nginx -d $DOMAIN
 fi
 
-echo "تم إعداد Nginx بنجاح!"
+echo "Nginx setup complete!"

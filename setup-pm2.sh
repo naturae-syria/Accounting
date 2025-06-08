@@ -1,16 +1,16 @@
 #!/bin/bash
 
-# تكوين المتغيرات
+# Variable configuration
 APP_NAME="accounting-system"
 APP_DIR="/var/www/$APP_NAME"
 
-# التحقق من تثبيت PM2
+# Ensure PM2 is installed
 if ! command -v pm2 &> /dev/null; then
-    echo "PM2 غير مثبت. جاري التثبيت..."
+    echo "PM2 is not installed. Installing..."
     pnpm add -g pm2
 fi
 
-# إنشاء ملف تكوين PM2
+# Create PM2 configuration file
 cat > ecosystem.config.js << EOL
 module.exports = {
   apps: [{
@@ -35,12 +35,12 @@ module.exports = {
 };
 EOL
 
-# تشغيل التطبيق باستخدام PM2
-echo "تشغيل التطبيق باستخدام PM2..."
+# Start the application with PM2
+echo "Starting application with PM2..."
 pm2 start ecosystem.config.js
 
-# تكوين PM2 للتشغيل عند بدء النظام
+# Configure PM2 to run on system startup
 pm2 save
 pm2 startup | grep -v "sudo" | bash
 
-echo "تم إعداد PM2 بنجاح!"
+echo "PM2 setup complete!"

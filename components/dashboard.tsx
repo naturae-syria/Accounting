@@ -52,7 +52,7 @@ export default function Dashboard() {
         .map(([productId, data]) => {
           const product = productsData.find((p) => p.id === productId)
           return {
-            name: product?.name || "غير معروف",
+            name: product?.name || "Unknown",
             quantity: data.quantity,
             revenue: data.revenue,
           }
@@ -76,7 +76,7 @@ export default function Dashboard() {
       const centerPerformanceData = Object.entries(centerSales).map(([centerId, data]) => {
         const center = centersData.find((c) => c.id === centerId)
         return {
-          name: center?.name || "غير معروف",
+          name: center?.name || "Unknown",
           revenue: data.revenue,
         }
       })

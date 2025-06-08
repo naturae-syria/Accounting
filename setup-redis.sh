@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# التحقق من تثبيت Redis
+# Ensure Redis is installed
 if ! command -v redis-server &> /dev/null; then
-    echo "Redis غير مثبت. جاري التثبيت..."
+    echo "Redis is not installed. Installing..."
     sudo apt-get update
     sudo apt-get install -y redis-server
 fi
 
-# تكوين Redis للتشغيل عند بدء النظام
+# Configure Redis to start on boot
 sudo systemctl enable redis-server
 sudo systemctl start redis-server
 
-# التحقق من حالة Redis
+# Check Redis status
 sudo systemctl status redis-server
 
-echo "تم إعداد Redis بنجاح!"
+echo "Redis setup complete!"

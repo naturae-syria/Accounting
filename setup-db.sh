@@ -1,21 +1,21 @@
 #!/bin/bash
 
-# تكوين المتغيرات
+# Variable configuration
 DB_USER=${DB_USER:-postgres}
 DB_HOST=${DB_HOST:-localhost}
 DB_NAME=${DB_NAME:-accounting_system}
 DB_PASSWORD=${DB_PASSWORD:-postgres}
 DB_PORT=${DB_PORT:-5432}
 
-# التحقق من تثبيت PostgreSQL
+# Ensure PostgreSQL is installed
 if ! command -v psql &> /dev/null; then
-    echo "PostgreSQL غير مثبت. جاري التثبيت..."
+    echo "PostgreSQL is not installed. Installing..."
     sudo apt-get update
     sudo apt-get install -y postgresql postgresql-contrib
 fi
 
-# إنشاء قاعدة البيانات والمستخدم
-echo "إنشاء قاعدة البيانات والمستخدم..."
+# Create database and user
+echo "Creating database and user..."
 sudo -u postgres psql << EOF
 -- إنشاء المستخدم إذا لم يكن موجودًا
 DO \$\$
@@ -33,15 +33,15 @@ SELECT 'CREATE DATABASE $DB_NAME' WHERE NOT EXISTS (SELECT FROM pg_database WHER
 GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;
 EOF
 
-# تهيئة قاعدة البيانات
-echo "تهيئة قاعدة البيانات..."
+# Initialize the database
+echo "Initializing the database..."
 export DB_USER=$DB_USER
 export DB_HOST=$DB_HOST
 export DB_NAME=$DB_NAME
 export DB_PASSWORD=$DB_PASSWORD
 export DB_PORT=$DB_PORT
 
-# تشغيل سكريبت تهيئة قاعدة البيانات
+# Run database initialization script
 pnpm run init-db
 
-echo "تم إعداد قاعدة البيانات بنجاح!"
+echo "Database setup complete!"
