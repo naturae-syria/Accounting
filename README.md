@@ -53,7 +53,7 @@ REDIS_URL=redis://localhost:6379
 4. Initialize the database:
 
 ```bash
-node -e "require('./lib/db').initializeDatabase().then(() => require('./lib/db').seedDatabase()).then(() => console.log('Database ready'))"
+pnpm run init-db
 ```
 
 5. Start the development server:
@@ -72,4 +72,45 @@ pnpm start
 ## Custom reports
 
 The dashboard includes a **Custom Reports** tab where you can define your own reports. Choose a report type, enter a name and comma separated columns, then add the report. Reports can be removed from the same tab. They are stored in the database via `/api/custom-reports`.
+
+## Managing the application
+
+For production deployments the application can be managed using **PM2**. After running `setup-pm2.sh` an `ecosystem.config.js` file is generated and the app is registered with the name `accounting-system`.
+The `setup-all.sh` script also installs a helper command named `NexAccount` in `/usr/local/bin` to make management easier.
+
+- **Start** the application
+
+  ```bash
+  NexAccount Start
+  ```
+
+- **Stop** the application
+
+  ```bash
+  NexAccount Stop
+  ```
+
+- **Restart** the application
+
+  ```bash
+  NexAccount Restart
+  ```
+
+- **Check status**
+
+  ```bash
+  NexAccount Status
+  ```
+
+- **Update** the application
+
+  ```bash
+  NexAccount Update
+  ```
+
+- **Delete** the PM2 process
+
+  ```bash
+  NexAccount Delete
+  ```
 

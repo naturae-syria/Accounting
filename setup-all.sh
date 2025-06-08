@@ -64,6 +64,11 @@ pnpm run build
 echo "Setting up PM2..."
 ./setup-pm2.sh
 
+# Install NexAccount CLI for managing the service
+echo "Installing NexAccount CLI..."
+sudo cp NexAccount /usr/local/bin/
+sudo chmod +x /usr/local/bin/NexAccount
+
 # إعداد Nginx
 echo "Setting up Nginx..."
 USE_SSL=$USE_SSL DOMAIN=$DOMAIN ./setup-nginx.sh
