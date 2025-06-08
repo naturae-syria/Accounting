@@ -26,6 +26,10 @@ for cmd in git node pnpm; do
     fi
 done
 
+# Ensure helper scripts are executable
+[ ! -x ./setup-db.sh ] && chmod +x ./setup-db.sh
+[ ! -x ./setup-redis.sh ] && chmod +x ./setup-redis.sh
+
 # إعداد قاعدة البيانات
 echo "Setting up the database..."
 ./setup-db.sh
