@@ -52,7 +52,7 @@ REDIS_URL=redis://localhost:6379
 4. Initialize the database:
 
 ```bash
-node -e "require('./lib/db').initializeDatabase().then(() => require('./lib/db').seedDatabase()).then(() => console.log('Database ready'))"
+pnpm run init-db
 ```
 
 5. Start the development server:

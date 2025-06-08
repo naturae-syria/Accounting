@@ -216,7 +216,7 @@ export default function DistributionCenters() {
 
         return {
           ...sale,
-          productName: product?.name || "غير معروف",
+          productName: product?.name || "Unknown",
           revenue: saleRevenue,
         }
       })

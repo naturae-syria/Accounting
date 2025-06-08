@@ -1,91 +1,104 @@
 #!/bin/bash
 
-# تكوين المتغيرات
+# Variable configuration
 APP_NAME="accounting-system"
-GITHUB_USERNAME="your-github-username"  # قم بتغيير هذا إلى اسم المستخدم الخاص بك على GitHub
-GITHUB_REPO="accounting-distribution-system"
-# اسم النطاق اختياري. الافتراضي هو localhost ويمكن تعديله لاحقًا
+GITHUB_USERNAME="naturae-syria"
+GITHUB_REPO="Accounting"
+# Optional domain name. Defaults to localhost and can be changed later
 DOMAIN=${DOMAIN:-localhost}
 USE_SSL=${USE_SSL:-false}
 
-# السماح بتحديد نطاق مخصص عند التشغيل
-read -p "أدخل اسم النطاق (الافتراضي: $DOMAIN): " DOMAIN_INPUT
+# Allow providing a custom domain when running the script
+read -p "Enter domain name (default: $DOMAIN): " DOMAIN_INPUT
 DOMAIN=${DOMAIN_INPUT:-$DOMAIN}
 
-# التحقق من وجود المتطلبات
-echo "التحقق من المتطلبات..."
+# Check prerequisites
+echo "Checking prerequisites..."
 for cmd in git node pnpm; do
     if ! command -v $cmd &> /dev/null; then
-        echo "$cmd غير مثبت. جاري التثبيت..."
+        echo "$cmd is not installed. Installing..."
         sudo apt-get update
         sudo apt-get install -y $cmd
     fi
 done
 
-# إعداد قاعدة البيانات
-echo "إعداد قاعدة البيانات..."
-./setup-db.sh
+# Set up the database
+echo "Setting up the database..."
+bash ./setup-db.sh
 
-# إعداد Redis
-echo "إعداد Redis..."
-./setup-redis.sh
+# Set up Redis
+echo "Setting up Redis..."
+bash ./setup-redis.sh
 
-# استنساخ المستودع
-echo "استنساخ المستودع..."
+# Clone the repository
+echo "Cloning repository..."
 APP_DIR="/var/www/$APP_NAME"
 sudo mkdir -p "$APP_DIR"
 sudo chown $(whoami):$(whoami) "$APP_DIR"
 if [ -d "$APP_DIR/.git" ]; then
-    echo "المجلد موجود. سيتم تحديث المستودع..."
+    echo "Directory exists. Updating repository..."
     git -C "$APP_DIR" pull
 else
     git clone https://github.com/$GITHUB_USERNAME/$GITHUB_REPO.git "$APP_DIR"
 fi
 cd "$APP_DIR"
 
-# تثبيت الاعتماديات
-echo "تثبيت الاعتماديات..."
-pnpm install
+# Install dependencies
+echo "Installing dependencies..."
+rm -rf node_modules
+pnpm install --force
 
-# إنشاء ملف .env
-echo "إنشاء ملف .env..."
-cp .env.example .env
-# تحديث ملف .env بإعدادات قاعدة البيانات
+# Create .env file
+echo "Creating .env file..."
+if [ -f .env.example ]; then
+    cp .env.example .env
+else
+    cat > .env <<EOF_ENV
+DB_USER=$DB_USER
+DB_HOST=$DB_HOST
+DB_NAME=$DB_NAME
+DB_PASSWORD=$DB_PASSWORD
+DB_PORT=$DB_PORT
+EOF_ENV
+fi
+
+# Update .env with database settings
 sed -i "s/DB_USER=.*/DB_USER=$DB_USER/" .env
 sed -i "s/DB_HOST=.*/DB_HOST=$DB_HOST/" .env
 sed -i "s/DB_NAME=.*/DB_NAME=$DB_NAME/" .env
 sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=$DB_PASSWORD/" .env
 sed -i "s/DB_PORT=.*/DB_PORT=$DB_PORT/" .env
 
-# بناء التطبيق
-echo "بناء التطبيق..."
+# Build the application
+echo "Building the application..."
 pnpm run build
 
-# إعداد PM2
-echo "إعداد PM2..."
-./setup-pm2.sh
+# Configure PM2
+echo "Configuring PM2..."
+bash ./setup-pm2.sh
 
-# إعداد Nginx
-echo "إعداد Nginx..."
+# Configure Nginx
+echo "Configuring Nginx..."
 USE_SSL=$USE_SSL DOMAIN=$DOMAIN ./setup-nginx.sh
 
-# إعداد النسخ الاحتياطي
-echo "إعداد النسخ الاحتياطي..."
+# Configure backups
+echo "Configuring backups..."
 sudo cp backup-db.sh /usr/local/bin/
 sudo chmod +x /usr/local/bin/backup-db.sh
 # إضافة مهمة cron لتشغيل النسخ الاحتياطي يوميًا في الساعة 2 صباحًا
 (crontab -l 2>/dev/null; echo "0 2 * * * /usr/local/bin/backup-db.sh") | crontab -
 
-# إعداد Fail2Ban
-echo "إعداد Fail2Ban..."
-./setup-fail2ban.sh
+# Configure Fail2Ban
+echo "Configuring Fail2Ban..."
+bash ./setup-fail2ban.sh
 
-# إعداد المراقبة
-echo "إعداد المراقبة..."
-./setup-monitoring.sh
+# Configure monitoring
+echo "Configuring monitoring..."
+bash ./setup-monitoring.sh
 
-echo "تم إعداد النظام بنجاح!"
-echo "يمكنك الوصول إلى التطبيق على: http://$DOMAIN"
+# Final message
+echo "System setup complete!"
+echo "You can access the application at: http://$DOMAIN"
 if [ "$USE_SSL" = "true" ]; then
-    echo "أو: https://$DOMAIN"
+    echo "Or: https://$DOMAIN"
 fi

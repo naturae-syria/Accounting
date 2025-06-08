@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "init-db": "node -e \"require('./lib/db').initializeDatabase().then(() => require('./lib/db').seedDatabase()).then(() => console.log('Database ready')).catch(err => { console.error('Database init error:', err); process.exit(1); })\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

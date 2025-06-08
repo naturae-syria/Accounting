@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# منح صلاحيات التنفيذ لسكريبت تهيئة قاعدة البيانات
+# Grant execute permission for the database init script
 chmod +x init-db.sh
 
-# بناء وتشغيل الحاويات
+# Build and start containers
 docker-compose up -d
 
-# انتظار حتى تكون الخدمات جاهزة
-echo "انتظار حتى تكون الخدمات جاهزة..."
+# Wait until services are ready
+echo "Waiting for services to be ready..."
 sleep 10
 
-# تهيئة قاعدة البيانات
+# Initialize the database
 docker-compose exec app ./init-db.sh
 
-echo "تم تشغيل التطبيق بنجاح!"
-echo "يمكنك الوصول إلى التطبيق على: http://localhost:3000"
+echo "Application started successfully!"
+echo "You can access the app at: http://localhost:3000"

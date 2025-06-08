@@ -407,8 +407,8 @@ export default function Sales() {
                   const center = centers.find((c) => c.id === sale.centerId)
                   return (
                     <TableRow key={sale.id}>
-                      <TableCell className="font-medium">{product?.name || "غير معروف"}</TableCell>
-                      <TableCell>{center?.name || "غير معروف"}</TableCell>
+                      <TableCell className="font-medium">{product?.name || "Unknown"}</TableCell>
+                      <TableCell>{center?.name || "Unknown"}</TableCell>
                       <TableCell>{sale.quantity}</TableCell>
                       <TableCell>{sale.price.toLocaleString()} ل.س</TableCell>
                       <TableCell>{(sale.quantity * sale.price).toLocaleString()} ل.س</TableCell>
