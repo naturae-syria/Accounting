@@ -1,10 +1,17 @@
 #!/bin/bash
 
 # تكوين المتغيرات
+#
+# يمكن تجاوز المتغيرات التالية عند تشغيل السكريبت:
+#   GITHUB_USERNAME=yourname GITHUB_REPO=myrepo DOMAIN=example.com ./setup-all.sh
 APP_NAME="accounting-system"
-GITHUB_USERNAME="your-github-username"  # قم بتغيير هذا إلى اسم المستخدم الخاص بك على GitHub
-GITHUB_REPO="accounting-distribution-system"
-DOMAIN="your-domain.com"  # قم بتغيير هذا إلى اسم النطاق الخاص بك
+
+# المستودع الافتراضي هو https://github.com/naturae-syria/Accounting.git
+GITHUB_USERNAME="${GITHUB_USERNAME:-naturae-syria}"  # اسم المستخدم على GitHub
+GITHUB_REPO="${GITHUB_REPO:-Accounting}"            # اسم المستودع على GitHub
+
+# التأكد من تحديد اسم النطاق
+: "${DOMAIN:?يجب تحديد DOMAIN}"                    # اسم النطاق المستخدم
 USE_SSL=${USE_SSL:-false}
 
 # التحقق من وجود المتطلبات
