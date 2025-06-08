@@ -26,6 +26,10 @@ for cmd in git node pnpm; do
     fi
 done
 
+# Ensure helper scripts are executable
+[ ! -x ./setup-db.sh ] && chmod +x ./setup-db.sh
+[ ! -x ./setup-redis.sh ] && chmod +x ./setup-redis.sh
+
 # إعداد قاعدة البيانات
 echo "Setting up the database..."
 ./setup-db.sh
@@ -45,10 +49,26 @@ cd "$APP_DIR"
 # تثبيت الاعتماديات
 echo "Installing dependencies..."
 pnpm install
+if [ ! -x node_modules/.bin/ts-node ]; then
+    echo "ts-node not found after install. Attempting global install..."
+    pnpm add -D ts-node || sudo npm install -g ts-node || true
+fi
 
 # إنشاء ملف .env
+# إنشاء ملف .env
 echo "Creating .env file..."
-cp .env.example .env
+if [ -f .env.example ]; then
+    cp .env.example .env
+else
+    cat > .env << EOF
+DB_USER=$DB_USER
+DB_HOST=$DB_HOST
+DB_NAME=$DB_NAME
+DB_PASSWORD=$DB_PASSWORD
+DB_PORT=$DB_PORT
+REDIS_URL=redis://localhost:6379
+EOF
+fi
 # تحديث ملف .env بإعدادات قاعدة البيانات
 sed -i "s/DB_USER=.*/DB_USER=$DB_USER/" .env
 sed -i "s/DB_HOST=.*/DB_HOST=$DB_HOST/" .env
@@ -89,7 +109,21 @@ echo "Setting up monitoring..."
 ./setup-monitoring.sh
 
 echo "System setup completed successfully!"
-echo "You can access the application at: http://$DOMAIN"
+
+# Gather service statuses
+DB_STATUS=$(sudo systemctl is-active postgresql || true)
+REDIS_STATUS=$(sudo systemctl is-active redis-server || true)
+NGINX_STATUS=$(sudo systemctl is-active nginx || true)
+PM2_STATUS=$(pm2 status "$APP_NAME" | grep -q online && echo "online" || echo "offline")
+
+echo "\n==== Installation Summary ===="
+echo "Application directory: $APP_DIR"
+echo "Database service: $DB_STATUS on port $DB_PORT"
+echo "Redis service: $REDIS_STATUS"
+echo "Web service (Nginx): $NGINX_STATUS on http://$DOMAIN"
 if [ "$USE_SSL" = "true" ]; then
-    echo "Or: https://$DOMAIN"
+    echo "HTTPS enabled at https://$DOMAIN"
 fi
+echo "PM2 process '$APP_NAME': $PM2_STATUS"
+echo "Use the 'NexAccount' command to manage the application (Start|Stop|Restart|Status|Update|Delete)."
+echo "If any service is not active you may need to restart the server."

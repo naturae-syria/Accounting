@@ -2,6 +2,14 @@
 
 COMMAND=$(echo "$1" | tr 'A-Z' 'a-z')
 APP_NAME="accounting-system"
+# Directory where the application is installed
+APP_DIR="/var/www/$APP_NAME"
+
+# Always operate from the application directory
+cd "$APP_DIR" 2>/dev/null || {
+  echo "Application directory $APP_DIR not found"
+  exit 1
+}
 
 case "$COMMAND" in
   start)

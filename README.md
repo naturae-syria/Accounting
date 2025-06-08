@@ -39,7 +39,7 @@ sudo bash install-debian.sh
 pnpm install
 ```
 
-3. Create a `.env` file (or export the variables in your shell) with the following variables:
+3. Copy `.env.example` to `.env` (or export the variables in your shell) and update the values as needed:
 
 ```env
 DB_USER=postgres
@@ -77,6 +77,7 @@ The dashboard includes a **Custom Reports** tab where you can define your own re
 
 For production deployments the application can be managed using **PM2**. After running `setup-pm2.sh` an `ecosystem.config.js` file is generated and the app is registered with the name `accounting-system`.
 The `setup-all.sh` script also installs a helper command named `NexAccount` in `/usr/local/bin` to make management easier.
+This command runs from `/var/www/accounting-system`, so you can invoke `NexAccount` anywhere on the system.
 
 - **Start** the application
 
