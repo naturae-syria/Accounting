@@ -7,7 +7,7 @@ APP_DIR="/var/www/$APP_NAME"
 # التحقق من تثبيت PM2
 if ! command -v pm2 &> /dev/null; then
     echo "PM2 غير مثبت. جاري التثبيت..."
-    npm install -g pm2
+    pnpm add -g pm2
 fi
 
 # إنشاء ملف تكوين PM2
@@ -15,7 +15,7 @@ cat > ecosystem.config.js << EOL
 module.exports = {
   apps: [{
     name: "$APP_NAME",
-    script: "npm",
+    script: "pnpm",
     args: "start",
     instances: "max",
     exec_mode: "cluster",

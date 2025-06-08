@@ -4,12 +4,17 @@
 APP_NAME="accounting-system"
 GITHUB_USERNAME="your-github-username"  # قم بتغيير هذا إلى اسم المستخدم الخاص بك على GitHub
 GITHUB_REPO="accounting-distribution-system"
-DOMAIN="your-domain.com"  # قم بتغيير هذا إلى اسم النطاق الخاص بك
+# اسم النطاق اختياري. الافتراضي هو localhost ويمكن تعديله لاحقًا
+DOMAIN=${DOMAIN:-localhost}
 USE_SSL=${USE_SSL:-false}
+
+# السماح بتحديد نطاق مخصص عند التشغيل
+read -p "أدخل اسم النطاق (الافتراضي: $DOMAIN): " DOMAIN_INPUT
+DOMAIN=${DOMAIN_INPUT:-$DOMAIN}
 
 # التحقق من وجود المتطلبات
 echo "التحقق من المتطلبات..."
-for cmd in git node npm; do
+for cmd in git node pnpm; do
     if ! command -v $cmd &> /dev/null; then
         echo "$cmd غير مثبت. جاري التثبيت..."
         sudo apt-get update
@@ -35,7 +40,7 @@ cd "$APP_DIR"
 
 # تثبيت الاعتماديات
 echo "تثبيت الاعتماديات..."
-npm ci
+pnpm install
 
 # إنشاء ملف .env
 echo "إنشاء ملف .env..."
@@ -49,7 +54,7 @@ sed -i "s/DB_PORT=.*/DB_PORT=$DB_PORT/" .env
 
 # بناء التطبيق
 echo "بناء التطبيق..."
-npm run build
+pnpm run build
 
 # إعداد PM2
 echo "إعداد PM2..."
