@@ -460,16 +460,12 @@ EOF
 # جعل سكريبت المراقبة قابل للتنفيذ
 chmod +x monitor.sh
 
-# إنشاء ملف .env لتخزين المتغيرات
-cat > .env << EOF
-DB_USER=postgres
-DB_HOST=db
-DB_NAME=accounting_system
-DB_PASSWORD=$DB_PASSWORD
-DB_PORT=5432
-REDIS_URL=redis://:$REDIS_PASSWORD@redis:6379
-APP_SECRET=$APP_SECRET
-EOF
+# إنشاء ملف .env من القالب
+cp .env.example .env
+sed -i "s/DB_HOST=.*/DB_HOST=db/" .env
+sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=$DB_PASSWORD/" .env
+sed -i "s#REDIS_URL=.*#REDIS_URL=redis://:$REDIS_PASSWORD@redis:6379#" .env
+echo "APP_SECRET=$APP_SECRET" >> .env
 
 # إنشاء ملف .dockerignore
 cat > .dockerignore << 'EOF'
