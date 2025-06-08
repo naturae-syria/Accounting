@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# انتظار حتى تكون قاعدة البيانات جاهزة
-echo "انتظار حتى تكون قاعدة البيانات جاهزة..."
+# Wait until the database is ready
+echo "Waiting for the database to be ready..."
 until node -e "
 const { Pool } = require('pg');
 const pool = new Pool({
@@ -12,17 +12,17 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 pool.query('SELECT 1').then(() => {
-  console.log('تم الاتصال بقاعدة البيانات بنجاح');
+  console.log('Database connection successful');
   process.exit(0);
 }).catch(err => {
-  console.error('خطأ في الاتصال بقاعدة البيانات:', err);
+  console.error('Database connection error:', err);
   process.exit(1);
 });
 "; do
-  echo "قاعدة البيانات غير جاهزة بعد... انتظار 2 ثانية"
+  echo "Database not ready yet... waiting 2 seconds"
   sleep 2
 done
 
-# تهيئة قاعدة البيانات
-echo "تهيئة قاعدة البيانات..."
+# Initialize the database
+echo "Initializing the database..."
 pnpm run init-db

@@ -167,7 +167,7 @@ export default function Inventory() {
   }
 
   const getCenterById = (centerId: string) => {
-    return centers.find((center) => center.id === centerId) || { name: "غير معروف" }
+    return centers.find((center) => center.id === centerId) || { name: "Unknown" }
   }
 
   return (
@@ -517,7 +517,7 @@ export default function Inventory() {
                                     const product = products.find((p) => p.id === item.productId)
                                     return (
                                       <TableRow key={item.id}>
-                                        <TableCell>{product?.name || "غير معروف"}</TableCell>
+                                        <TableCell>{product?.name || "Unknown"}</TableCell>
                                         <TableCell>{item.initialQuantity}</TableCell>
                                         <TableCell>{item.currentQuantity}</TableCell>
                                         <TableCell>{new Date(item.lastUpdated).toLocaleDateString()}</TableCell>

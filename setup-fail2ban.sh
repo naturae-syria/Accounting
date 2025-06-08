@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# التحقق من تثبيت Fail2Ban
+# Ensure Fail2Ban is installed
 if ! command -v fail2ban-server &> /dev/null; then
-    echo "Fail2Ban غير مثبت. جاري التثبيت..."
+    echo "Fail2Ban is not installed. Installing..."
     sudo apt-get update
     sudo apt-get install -y fail2ban
 fi
 
-# إنشاء ملف تكوين Fail2Ban
+# Create Fail2Ban configuration
 sudo tee /etc/fail2ban/jail.local > /dev/null << EOL
 [sshd]
 enabled = true
@@ -26,7 +26,7 @@ maxretry = 5
 bantime = 3600
 EOL
 
-# إعادة تشغيل Fail2Ban
+# Restart Fail2Ban
 sudo systemctl restart fail2ban
 
-echo "تم إعداد Fail2Ban بنجاح!"
+echo "Fail2Ban setup complete!"

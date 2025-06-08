@@ -320,7 +320,7 @@ export const getProductInventoryReport = (productId: string) => {
       const center = centers.find((c) => c.id === item.centerId)
       return {
         ...item,
-        centerName: center?.name || "غير معروف",
+        centerName: center?.name || "Unknown",
         centerAddress: center?.address || "",
         centerContact: center?.contactPerson || "",
       }
@@ -344,7 +344,7 @@ export const getCenterInventoryReport = (centerId: string) => {
       const product = products.find((p) => p.id === item.productId)
       return {
         ...item,
-        productName: product?.name || "غير معروف",
+        productName: product?.name || "Unknown",
         productBrand: product?.brand || "",
         productCategory: product?.category || "",
         productPrice: product?.price || 0,
@@ -382,7 +382,7 @@ export const getSalesByCenterReport = (centerId: string, startDate?: string, end
         const product = products.find((p) => p.id === sale.productId)
         return {
           ...sale,
-          productName: product?.name || "غير معروف",
+          productName: product?.name || "Unknown",
           productBrand: product?.brand || "",
           productCategory: product?.category || "",
           totalAmount: sale.quantity * sale.price,
