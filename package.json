@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "init-db": "ts-node ./lib/db.ts && echo 'Database ready'"
+    "init-db": "ts-node --esm ./lib/db.ts && echo 'Database ready'"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
