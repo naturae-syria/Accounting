@@ -3,7 +3,7 @@ import { getInventoryLog } from "@/lib/db"
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     const productId = searchParams.get("productId")
     const centerId = searchParams.get("centerId")
 
