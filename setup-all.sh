@@ -9,7 +9,7 @@ USE_SSL=${USE_SSL:-false}
 
 # التحقق من وجود المتطلبات
 echo "التحقق من المتطلبات..."
-for cmd in git node npm; do
+for cmd in git node pnpm; do
     if ! command -v $cmd &> /dev/null; then
         echo "$cmd غير مثبت. جاري التثبيت..."
         sudo apt-get update
@@ -35,7 +35,7 @@ cd "$APP_DIR"
 
 # تثبيت الاعتماديات
 echo "تثبيت الاعتماديات..."
-npm ci
+pnpm install
 
 # إنشاء ملف .env
 echo "إنشاء ملف .env..."
@@ -49,7 +49,7 @@ sed -i "s/DB_PORT=.*/DB_PORT=$DB_PORT/" .env
 
 # بناء التطبيق
 echo "بناء التطبيق..."
-npm run build
+pnpm run build
 
 # إعداد PM2
 echo "إعداد PM2..."

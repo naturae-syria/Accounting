@@ -98,7 +98,7 @@ cat > README.md << EOL
 
 2. تثبيت الاعتماديات:
    \`\`\`bash
-   npm install
+   pnpm install
    \`\`\`
 
 3. إعداد متغيرات البيئة:
@@ -109,12 +109,12 @@ cat > README.md << EOL
 
 4. تهيئة قاعدة البيانات:
    \`\`\`bash
-   npm run init-db
+   pnpm run init-db
    \`\`\`
 
 5. تشغيل التطبيق في وضع التطوير:
    \`\`\`bash
-   npm run dev
+   pnpm run dev
    \`\`\`
 
 ## النشر على الخادم
