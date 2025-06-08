@@ -53,7 +53,7 @@ REDIS_URL=redis://localhost:6379
 4. Initialize the database:
 
 ```bash
-node -e "require('./lib/db').initializeDatabase().then(() => require('./lib/db').seedDatabase()).then(() => console.log('Database ready'))"
+pnpm run init-db
 ```
 
 5. Start the development server:
@@ -72,4 +72,46 @@ pnpm start
 ## Custom reports
 
 The dashboard includes a **Custom Reports** tab where you can define your own reports. Choose a report type, enter a name and comma separated columns, then add the report. Reports can be removed from the same tab. They are stored in the database via `/api/custom-reports`.
+
+## Managing the application
+
+For production deployments the application can be managed using **PM2**. After running `setup-pm2.sh` an `ecosystem.config.js` file is generated and the app is registered with the name `accounting-system`.
+
+- **Start** the application
+
+  ```bash
+  pm2 start ecosystem.config.js
+  ```
+
+- **Stop** the application
+
+  ```bash
+  pm2 stop accounting-system
+  ```
+
+- **Restart** the application
+
+  ```bash
+  pm2 restart accounting-system
+  ```
+
+- **Check status**
+
+  ```bash
+  pm2 status
+  ```
+
+- **Update** the application
+
+  ```bash
+  git pull
+  pnpm install
+  pm2 restart accounting-system
+  ```
+
+- **Delete** the PM2 process
+
+  ```bash
+  pm2 delete accounting-system
+  ```
 
