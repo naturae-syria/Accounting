@@ -25,4 +25,4 @@ done
 
 # تهيئة قاعدة البيانات
 echo "تهيئة قاعدة البيانات..."
-pnpm run init-db
+npm run init-db
