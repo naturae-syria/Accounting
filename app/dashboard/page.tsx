@@ -7,6 +7,7 @@ import Products from "@/components/products"
 import DistributionCenters from "@/components/distribution-centers"
 import Sales from "@/components/sales"
 import Inventory from "@/components/inventory"
+import CustomReports from "@/components/custom-reports"
 import { initializeData } from "@/lib/data-utils"
 import { useToast } from "@/components/ui/use-toast"
 
@@ -24,7 +25,7 @@ export default function DashboardPage() {
 
   return (
     <Tabs defaultValue="dashboard" className="w-full">
-      <TabsList className="grid w-full grid-cols-5 bg-background-light">
+      <TabsList className="grid w-full grid-cols-6 bg-background-light">
         <TabsTrigger value="dashboard" className="data-[state=active]:bg-primary data-[state=active]:text-white">
           لوحة التحكم
         </TabsTrigger>
@@ -39,6 +40,9 @@ export default function DashboardPage() {
         </TabsTrigger>
         <TabsTrigger value="inventory" className="data-[state=active]:bg-primary data-[state=active]:text-white">
           الجرد
+        </TabsTrigger>
+        <TabsTrigger value="customReports" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+          التقارير المخصصة
         </TabsTrigger>
       </TabsList>
 
@@ -60,6 +64,10 @@ export default function DashboardPage() {
 
       <TabsContent value="inventory">
         <Inventory />
+      </TabsContent>
+
+      <TabsContent value="customReports">
+        <CustomReports />
       </TabsContent>
     </Tabs>
   )

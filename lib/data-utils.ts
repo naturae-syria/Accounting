@@ -1,4 +1,10 @@
-import type { Product, DistributionCenter, Sale, ProductInventory } from "./types"
+import type {
+  Product,
+  DistributionCenter,
+  Sale,
+  ProductInventory,
+  CustomReport,
+} from "./types"
 
 // Local Storage Keys
 const PRODUCTS_KEY = "accounting_products"
@@ -578,3 +584,45 @@ export const getProductsFromFile = (): Product[] => {
     return []
   }
 }
+
+// Custom Reports
+const CUSTOM_REPORTS_KEY = "accounting_custom_reports"
+
+export const getCustomReports = (): CustomReport[] => {
+  try {
+    const json = safeLocalStorage.getItem(CUSTOM_REPORTS_KEY);
+    return json ? JSON.parse(json) : [];
+  } catch (error) {
+    console.error("Error loading custom reports:", error);
+    return [];
+  }
+};
+
+export const saveCustomReports = (reports: CustomReport[]) => {
+  try {
+    safeLocalStorage.setItem(CUSTOM_REPORTS_KEY, JSON.stringify(reports));
+  } catch (error) {
+    console.error("Error saving custom reports:", error);
+  }
+};
+
+export const addCustomReport = (report: Omit<CustomReport, "id">): CustomReport => {
+  const reports = getCustomReports();
+  const newReport: CustomReport = { ...report, id: Date.now().toString() };
+  saveCustomReports([...reports, newReport]);
+  return newReport;
+};
+
+export const updateCustomReport = (id: string, report: Partial<CustomReport>): CustomReport | null => {
+  const reports = getCustomReports();
+  const index = reports.findIndex((r) => r.id === id);
+  if (index === -1) return null;
+  reports[index] = { ...reports[index], ...report };
+  saveCustomReports(reports);
+  return reports[index];
+};
+
+export const deleteCustomReport = (id: string): void => {
+  const reports = getCustomReports().filter((r) => r.id !== id);
+  saveCustomReports(reports);
+};
