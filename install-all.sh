@@ -111,16 +111,17 @@ FROM node:18-alpine AS base
 WORKDIR /app
 
 # نسخ ملفات تعريف الحزم
-COPY package.json package-lock.json ./
+RUN npm install -g pnpm
+COPY package.json pnpm-lock.yaml ./
 
 # تثبيت الاعتماديات
 FROM base AS deps
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
 # بناء التطبيق
 FROM deps AS builder
 COPY . .
-RUN npm run build
+RUN pnpm run build
 
 # إنشاء صورة الإنتاج
 FROM base AS runner
@@ -146,7 +147,7 @@ ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
 # تشغيل التطبيق
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
 EOF
 
 # إنشاء ملف docker-compose.yml
