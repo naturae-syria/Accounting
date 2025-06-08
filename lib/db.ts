@@ -1,5 +1,11 @@
 import { Pool } from "pg"
-import type { Product, DistributionCenter, Sale, ProductInventory } from "./types"
+import type {
+  Product,
+  DistributionCenter,
+  Sale,
+  ProductInventory,
+  CustomReport,
+} from "./types"
 
 // إعداد الاتصال بقاعدة البيانات
 const pool = new Pool({
@@ -97,6 +103,19 @@ export const initializeDatabase = async () => {
         operation_type VARCHAR(20) NOT NULL,
         reason TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
+    // إنشاء جدول التقارير المخصصة
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS custom_reports (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        type VARCHAR(50) NOT NULL,
+        columns TEXT[] NOT NULL DEFAULT '{}',
+        filters JSONB,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `)
 
@@ -1072,6 +1091,58 @@ export const getProductsFromFile = async (): Promise<Product[]> => {
     }
   } catch (error) {
     console.error("خطأ في استيراد المنتجات:", error)
+    throw error
+  }
+}
+
+// دوال التقارير المخصصة
+export const getCustomReports = async (): Promise<CustomReport[]> => {
+  try {
+    const result = await pool.query(
+      `SELECT id, name, type, columns, filters FROM custom_reports ORDER BY id`
+    )
+    return result.rows.map((row) => ({
+      id: row.id.toString(),
+      name: row.name,
+      type: row.type,
+      columns: row.columns || [],
+      filters: row.filters || {},
+    }))
+  } catch (error) {
+    console.error("خطأ في الحصول على التقارير المخصصة:", error)
+    throw error
+  }
+}
+
+export const addCustomReport = async (
+  report: Omit<CustomReport, "id">,
+): Promise<CustomReport> => {
+  try {
+    const result = await pool.query(
+      `
+      INSERT INTO custom_reports (name, type, columns, filters)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id
+    `,
+      [report.name, report.type, report.columns, report.filters || null],
+    )
+    const id = result.rows[0].id.toString()
+    return { id, ...report }
+  } catch (error) {
+    console.error("خطأ في إضافة التقرير المخصص:", error)
+    throw error
+  }
+}
+
+export const deleteCustomReport = async (id: string): Promise<boolean> => {
+  try {
+    const result = await pool.query(
+      `DELETE FROM custom_reports WHERE id = $1`,
+      [id],
+    )
+    return result.rowCount > 0
+  } catch (error) {
+    console.error("خطأ في حذف التقرير المخصص:", error)
     throw error
   }
 }

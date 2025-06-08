@@ -53,3 +53,11 @@ export interface InventoryLog {
   productName?: string
   centerName?: string
 }
+
+export interface CustomReport {
+  id: string;
+  name: string;
+  type: "product-inventory" | "center-inventory" | "center-sales" | "inventory-log";
+  columns: string[];
+  filters?: Record<string, string>;
+}
