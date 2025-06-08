@@ -4,7 +4,7 @@ import { getSalesByCenterReport } from "@/lib/db"
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const id = params.id
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     const startDate = searchParams.get("startDate")
     const endDate = searchParams.get("endDate")
 
