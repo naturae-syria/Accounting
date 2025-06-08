@@ -7,18 +7,18 @@ DOMAIN=${DOMAIN:-localhost}
 USE_SSL=${USE_SSL:-false}
 
 # السماح بتحديد نطاق مخصص عند التشغيل
-read -p "أدخل اسم النطاق (الافتراضي: $DOMAIN): " DOMAIN_INPUT
+read -p "Enter the domain name (default: $DOMAIN): " DOMAIN_INPUT
 DOMAIN=${DOMAIN_INPUT:-$DOMAIN}
 
 # التحقق من تثبيت Nginx
 if ! command -v nginx &> /dev/null; then
-    echo "Nginx غير مثبت. جاري التثبيت..."
+    echo "Nginx is not installed. Installing..."
     sudo apt-get update
     sudo apt-get install -y nginx
 fi
 
 # إنشاء ملف تكوين Nginx
-echo "إنشاء ملف تكوين Nginx..."
+echo "Creating Nginx configuration file..."
 sudo tee /etc/nginx/sites-available/$APP_NAME > /dev/null << EOL
 server {
     listen 80;
@@ -65,11 +65,11 @@ sudo nginx -t && sudo systemctl restart nginx
 
 # إعداد SSL إذا كان مطلوبًا
 if [ "$USE_SSL" = "true" ]; then
-    echo "إعداد SSL باستخدام Let's Encrypt..."
+    echo "Setting up SSL using Let's Encrypt..."
     
     # التحقق من تثبيت Certbot
     if ! command -v certbot &> /dev/null; then
-        echo "Certbot غير مثبت. جاري التثبيت..."
+        echo "Certbot is not installed. Installing..."
         sudo apt-get update
         sudo apt-get install -y certbot python3-certbot-nginx
     fi
@@ -78,4 +78,4 @@ if [ "$USE_SSL" = "true" ]; then
     sudo certbot --nginx -d $DOMAIN
 fi
 
-echo "تم إعداد Nginx بنجاح!"
+echo "Nginx setup completed successfully!"

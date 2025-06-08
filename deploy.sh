@@ -7,44 +7,44 @@ GITHUB_REPO="https://github.com/your-github-username/accounting-distribution-sys
 BRANCH="main"
 
 # التحقق من وجود المتطلبات
-echo "التحقق من المتطلبات..."
+echo "Checking requirements..."
 for cmd in git node pnpm; do
     if ! command -v $cmd &> /dev/null; then
-        echo "$cmd غير مثبت. الرجاء تثبيته قبل المتابعة."
+        echo "$cmd is not installed. Please install it before continuing."
         exit 1
     fi
 done
 
-# إنشاء مجلد التطبيق إذا لم يكن موجودًا
+# Creating application directory...ا لم يكن موجودًا
 if [ ! -d "$APP_DIR" ]; then
-    echo "إنشاء مجلد التطبيق..."
+    echo "Creating application directory..."
     sudo mkdir -p "$APP_DIR"
     sudo chown $(whoami):$(whoami) "$APP_DIR"
 fi
 
 # استنساخ أو تحديث المستودع
 if [ -d "$APP_DIR/.git" ]; then
-    echo "تحديث المستودع..."
+    echo "Updating repository..."
     cd "$APP_DIR"
     git fetch origin
     git reset --hard origin/$BRANCH
 else
-    echo "استنساخ المستودع..."
+    echo "Cloning repository..."
     git clone -b $BRANCH $GITHUB_REPO "$APP_DIR"
     cd "$APP_DIR"
 fi
 
 # تثبيت الاعتماديات
-echo "تثبيت الاعتماديات..."
+echo "Installing dependencies..."
 pnpm install
 
-# إنشاء ملف .env إذا لم يكن موجودًا
+# Creating .env file...ا لم يكن موجودًا
 if [ ! -f "$APP_DIR/.env" ]; then
-    echo "إنشاء ملف .env..."
+    echo "Creating .env file..."
     cp .env.example .env
     
     # طلب معلومات قاعدة البيانات
-    echo "الرجاء إدخال معلومات قاعدة البيانات:"
+    echo "Please enter database information:"
     read -p "DB_USER: " db_user
     read -p "DB_HOST: " db_host
     read -p "DB_NAME: " db_name
@@ -61,20 +61,20 @@ if [ ! -f "$APP_DIR/.env" ]; then
 fi
 
 # بناء التطبيق
-echo "بناء التطبيق..."
+echo "Building the application..."
 pnpm run build
 
 # تهيئة قاعدة البيانات
-echo "هل تريد تهيئة قاعدة البيانات؟ (y/n)"
+echo "Do you want to initialize the database? (y/n)"
 read init_db
 if [ "$init_db" = "y" ]; then
-    echo "تهيئة قاعدة البيانات..."
-    node -e "require('./lib/db').initializeDatabase().then(() => require('./lib/db').seedDatabase()).then(() => console.log('تم تهيئة قاعدة البيانات بنجاح')).catch(err => console.error('خطأ في تهيئة قاعدة البيانات:', err)).finally(() => process.exit())"
+    echo "Initializing the database..."
+    node -e "require('./lib/db').initializeDatabase().then(() => require('./lib/db').seedDatabase()).then(() => console.log('تم Initializing the database...جاح')).catch(err => console.error('خطأ في تهيئة قاعدة البيانات:', err)).finally(() => process.exit())"
 fi
 
 # إعداد PM2 إذا لم يكن موجودًا
 if ! command -v pm2 &> /dev/null; then
-    echo "تثبيت PM2..."
+    echo "Installing PM2..."
     pnpm add -g pm2
 fi
 
@@ -97,8 +97,8 @@ module.exports = {
 };
 EOL
 
-# إعادة تشغيل التطبيق باستخدام PM2
-echo "إعادة تشغيل التطبيق..."
+# Restarting the application...ستخدام PM2
+echo "Restarting the application..."
 pm2 startOrRestart ecosystem.config.js
 
 # تكوين PM2 للتشغيل عند بدء النظام
@@ -107,13 +107,13 @@ pm2 startup | grep -v "sudo" | bash
 
 # إعداد Nginx إذا لم يكن موجودًا
 if ! command -v nginx &> /dev/null; then
-    echo "تثبيت Nginx..."
+    echo "Installing Nginx..."
     sudo apt-get update
     sudo apt-get install -y nginx
 fi
 
 # إنشاء ملف تكوين Nginx
-echo "إنشاء ملف تكوين Nginx..."
+echo "Creating Nginx configuration file..."
 sudo tee /etc/nginx/sites-available/$APP_NAME > /dev/null << EOL
 server {
     listen 80;
@@ -158,9 +158,9 @@ EOL
 sudo ln -sf /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl restart nginx
 
-echo "تم نشر التطبيق بنجاح!"
-echo "يمكنك الوصول إلى التطبيق على: http://your-server-ip"
+echo "Application deployed successfully!"
+echo "You can access the application at: http://your-server-ip"
 echo ""
-echo "لإعداد SSL، يمكنك استخدام Let's Encrypt:"
+echo "To set up SSL, you can use Let's Encrypt:"
 echo "sudo apt-get install -y certbot python3-certbot-nginx"
 echo "sudo certbot --nginx -d your-domain.com"

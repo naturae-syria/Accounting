@@ -32,7 +32,7 @@ check_success() {
     print_message "$GREEN" "✓ $1"
   else
     print_message "$RED" "✗ $1"
-    print_message "$RED" "حدث خطأ. إيقاف التثبيت."
+    print_message "$RED" "An error occurred. Aborting installation."
     exit 1
   fi
 }
@@ -40,13 +40,13 @@ check_success() {
 # طباعة رسالة الترحيب
 print_message "$BLUE" "
 =======================================================
-      تثبيت نظام المحاسبة والتوزيع باستخدام Docker
+      Installing the accounting and distribution system using Docker
 =======================================================
 "
 
 # التحقق من وجود Docker
 if ! command_exists docker; then
-  print_message "$YELLOW" "Docker غير مثبت. جاري التثبيت..."
+  print_message "$YELLOW" "Docker is not installed. Installing..."
   
   # تثبيت المتطلبات الأساسية
   sudo apt-get update
@@ -69,25 +69,25 @@ if ! command_exists docker; then
   # إضافة المستخدم الحالي إلى مجموعة docker
   sudo usermod -aG docker $USER
   
-  check_success "تم تثبيت Docker بنجاح"
+  check_success "Docker installed successfully"
   
-  print_message "$YELLOW" "يرجى تسجيل الخروج وإعادة تسجيل الدخول لتطبيق تغييرات المجموعة، ثم تشغيل هذا السكريبت مرة أخرى."
+  print_message "$YELLOW" "Please log out and log back in to apply group changes, then run this script again."
   exit 0
 else
-  print_message "$GREEN" "✓ Docker مثبت بالفعل"
+  print_message "$GREEN" "✓ Docker is already installed"
 fi
 
 # التحقق من وجود Docker Compose
 if ! command_exists docker-compose; then
-  print_message "$YELLOW" "Docker Compose غير مثبت. جاري التثبيت..."
+  print_message "$YELLOW" "Docker Compose is not installed. Installing..."
   
   # تثبيت Docker Compose
   sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   sudo chmod +x /usr/local/bin/docker-compose
   
-  check_success "تم تثبيت Docker Compose بنجاح"
+  check_success "Docker Compose installed successfully"
 else
-  print_message "$GREEN" "✓ Docker Compose مثبت بالفعل"
+  print_message "$GREEN" "✓ Docker Compose is already installed"
 fi
 
 # إنشاء مجلد للمشروع
@@ -95,7 +95,7 @@ PROJECT_DIR="accounting-system"
 mkdir -p $PROJECT_DIR
 cd $PROJECT_DIR
 
-print_message "$BLUE" "جاري إنشاء ملفات التكوين..."
+print_message "$BLUE" "Creating configuration files..."
 
 # توليد كلمات مرور عشوائية
 DB_PASSWORD=$(generate_password 16)
@@ -392,7 +392,7 @@ docker-compose exec -T db pg_dump -U postgres accounting_system > "$BACKUP_DIR/b
 # حذف النسخ الاحتياطية القديمة (الاحتفاظ بآخر 7 نسخ)
 ls -tp $BACKUP_DIR/backup_*.sql | grep -v '/$' | tail -n +8 | xargs -I {} rm -- {}
 
-echo "تم إنشاء نسخة احتياطية بنجاح: $BACKUP_DIR/backup_$TIMESTAMP.sql"
+echo "Backup created successfully: $BACKUP_DIR/backup_$TIMESTAMP.sql"
 EOF
 
 # جعل سكريبت النسخ الاحتياطي قابل للتنفيذ
@@ -405,7 +405,7 @@ cat > setup-backup-cron.sh << 'EOF'
 # إضافة مهمة cron للنسخ الاحتياطي اليومي في الساعة 2 صباحًا
 (crontab -l 2>/dev/null; echo "0 2 * * * $(pwd)/backup-db.sh >> $(pwd)/backups/backup.log 2>&1") | crontab -
 
-echo "تم إعداد النسخ الاحتياطي التلقائي اليومي في الساعة 2 صباحًا"
+echo "Daily automatic backup scheduled at 2 AM"
 EOF
 
 # جعل سكريبت إعداد cron قابل للتنفيذ
@@ -415,10 +415,10 @@ chmod +x setup-backup-cron.sh
 cat > restore-db.sh << 'EOF'
 #!/bin/bash
 
-# التحقق من وجود ملف النسخ الاحتياطي
+# التحقق من وجود backup-file
 if [ -z "$1" ]; then
-    echo "الاستخدام: $0 <ملف النسخ الاحتياطي>"
-    echo "مثال: $0 ./backups/backup_20230101_120000.sql"
+    echo "Usage: $0 <backup-file>"
+    echo "Example: $0 ./backups/backup_20230101_120000.sql"
     exit 1
 fi
 
@@ -426,15 +426,15 @@ BACKUP_FILE=$1
 
 # التحقق من وجود الملف
 if [ ! -f "$BACKUP_FILE" ]; then
-    echo "خطأ: ملف النسخ الاحتياطي غير موجود: $BACKUP_FILE"
+    echo "Error: Backup file not found: $BACKUP_FILE"
     exit 1
 fi
 
 # استعادة قاعدة البيانات
-echo "جاري استعادة قاعدة البيانات من $BACKUP_FILE..."
+echo "Restoring database from $BACKUP_FILE..."
 cat $BACKUP_FILE | docker-compose exec -T db psql -U postgres accounting_system
 
-echo "تم استعادة قاعدة البيانات بنجاح"
+echo "Database restored successfully"
 EOF
 
 # جعل سكريبت الاستعادة قابل للتنفيذ
@@ -445,15 +445,15 @@ cat > monitor.sh << 'EOF'
 #!/bin/bash
 
 # عرض حالة الحاويات
-echo "حالة الحاويات:"
+echo "Container status:"
 docker-compose ps
 
 # عرض استخدام الموارد
-echo -e "\nاستخدام الموارد:"
+echo -e "\nResource usage:"
 docker stats --no-stream $(docker-compose ps -q)
 
 # عرض سجلات التطبيق
-echo -e "\nآخر 10 سطور من سجلات التطبيق:"
+echo -e "\nLast 10 lines of application logs:"
 docker-compose logs --tail=10 app
 EOF
 
@@ -539,43 +539,43 @@ cat > package.json << 'EOF'
 }
 EOF
 
-# إنشاء سكريبت لبدء تشغيل التطبيق
+# إنشاء سكريبت to start the application
 cat > start.sh << 'EOF'
 #!/bin/bash
 
 # بناء وتشغيل الحاويات
 docker-compose up -d
 
-echo "تم بدء تشغيل التطبيق بنجاح!"
-echo "يمكنك الوصول إلى التطبيق على: http://localhost:3000"
-echo "يمكنك الوصول إلى قاعدة البيانات على: localhost:5432"
-echo "يمكنك الوصول إلى Redis على: localhost:6379"
+echo "Application started successfully!"
+echo "You can access the application at: http://localhost:3000"
+echo "You can access the database at: localhost:5432"
+echo "You can access Redis at: localhost:6379"
 EOF
 
 # جعل سكريبت البدء قابل للتنفيذ
 chmod +x start.sh
 
-# إنشاء سكريبت لإيقاف التطبيق
+# إنشاء سكريبت to stop the application
 cat > stop.sh << 'EOF'
 #!/bin/bash
 
 # إيقاف الحاويات
 docker-compose down
 
-echo "تم إيقاف التطبيق بنجاح!"
+echo "Application stopped successfully!"
 EOF
 
 # جعل سكريبت الإيقاف قابل للتنفيذ
 chmod +x stop.sh
 
-# إنشاء سكريبت لإعادة تشغيل التطبيق
+# إنشاء سكريبت to restart the application
 cat > restart.sh << 'EOF'
 #!/bin/bash
 
 # إعادة تشغيل الحاويات
 docker-compose restart
 
-echo "تم إعادة تشغيل التطبيق بنجاح!"
+echo "Application restarted successfully!"
 EOF
 
 # جعل سكريبت إعادة التشغيل قابل للتنفيذ
@@ -584,115 +584,110 @@ chmod +x restart.sh
 # إنشاء مجلد للنسخ الاحتياطي
 mkdir -p backups
 
-print_message "$GREEN" "✓ تم إنشاء جميع ملفات التكوين بنجاح"
+print_message "$GREEN" "✓ Configuration files created successfully"
 
-# طباعة معلومات الاتصال
+# طباعة Contact Information
 print_message "$BLUE" "
 =======================================================
-                معلومات الاتصال
+                Contact Information
 =======================================================
 "
 
-print_message "$YELLOW" "قاعدة البيانات PostgreSQL:"
-echo "المضيف: localhost"
-echo "المنفذ: 5432"
-echo "اسم المستخدم: postgres"
-echo "كلمة المرور: $DB_PASSWORD"
-echo "اسم قاعدة البيانات: accounting_system"
+print_message "$YELLOW" "PostgreSQL database:"
+echo "Host: localhost"
+echo "Port: 5432"
+echo "Username: postgres"
+echo "Password: $DB_PASSWORD"
+echo "Database name: accounting_system"
 
 print_message "$YELLOW" "Redis:"
-echo "المضيف: localhost"
-echo "المنفذ: 6379"
-echo "كلمة المرور: $REDIS_PASSWORD"
-echo "عنوان URL: redis://:$REDIS_PASSWORD@localhost:6379"
+echo "Host: localhost"
+echo "Port: 6379"
+echo "Password: $REDIS_PASSWORD"
+echo "URL: redis://:$REDIS_PASSWORD@localhost:6379"
 
-print_message "$YELLOW" "التطبيق:"
-echo "عنوان URL: http://localhost:3000"
-echo "عنوان URL (من خلال Nginx): http://localhost"
+print_message "$YELLOW" "Application:"
+echo "URL: http://localhost:3000"
+echo "URL (via Nginx): http://localhost"
 
 print_message "$BLUE" "
 =======================================================
-                الأوامر المتاحة
+                Available commands
 =======================================================
 "
 
 print_message "$YELLOW" "./start.sh"
-echo "لبدء تشغيل التطبيق"
+echo "to start the application"
 
 print_message "$YELLOW" "./stop.sh"
-echo "لإيقاف التطبيق"
+echo "to stop the application"
 
 print_message "$YELLOW" "./restart.sh"
-echo "لإعادة تشغيل التطبيق"
+echo "to restart the application"
 
 print_message "$YELLOW" "./backup-db.sh"
-echo "لإنشاء نسخة احتياطية من قاعدة البيانات"
+echo "to create a database backup"
 
-print_message "$YELLOW" "./restore-db.sh <ملف النسخ الاحتياطي>"
-echo "لاستعادة قاعدة البيانات من نسخة احتياطية"
+print_message "$YELLOW" "./restore-db.sh <backup-file>"
+echo "to restore the database from a backup"
 
 print_message "$YELLOW" "./setup-backup-cron.sh"
-echo "لإعداد النسخ الاحتياطي التلقائي اليومي"
+echo "to configure daily automatic backups"
 
 print_message "$YELLOW" "./monitor.sh"
-echo "لمراقبة حالة الحاويات واستخدام الموارد"
-
 print_message "$GREEN" "
 =======================================================
-                تم الإعداد بنجاح!
+                Setup completed successfully!
 =======================================================
-
-الآن، قم بنسخ كود التطبيق الخاص بك إلى مجلد 'app'
-ثم قم بتشغيل './start.sh' لبدء تشغيل التطبيق.
+Now copy your application code to the 'app' folder
+then run './start.sh' to start the application.
 "
-
-# حفظ معلومات الاتصال في ملف
 cat > connection-info.txt << EOF
 =======================================================
-                معلومات الاتصال
+                Contact Information
 =======================================================
 
-قاعدة البيانات PostgreSQL:
-المضيف: localhost
-المنفذ: 5432
-اسم المستخدم: postgres
-كلمة المرور: $DB_PASSWORD
-اسم قاعدة البيانات: accounting_system
+PostgreSQL database:
+Host: localhost
+Port: 5432
+Username: postgres
+Password: $DB_PASSWORD
+Database name: accounting_system
 
 Redis:
-المضيف: localhost
-المنفذ: 6379
-كلمة المرور: $REDIS_PASSWORD
-عنوان URL: redis://:$REDIS_PASSWORD@localhost:6379
+Host: localhost
+Port: 6379
+Password: $REDIS_PASSWORD
+URL: redis://:$REDIS_PASSWORD@localhost:6379
 
-التطبيق:
-عنوان URL: http://localhost:3000
-عنوان URL (من خلال Nginx): http://localhost
+Application:
+URL: http://localhost:3000
+URL (via Nginx): http://localhost
 
 =======================================================
-                الأوامر المتاحة
+                Available commands
 =======================================================
 
 ./start.sh
-لبدء تشغيل التطبيق
+to start the application
 
 ./stop.sh
-لإيقاف التطبيق
+to stop the application
 
 ./restart.sh
-لإعادة تشغيل التطبيق
+to restart the application
 
 ./backup-db.sh
-لإنشاء نسخة احتياطية من قاعدة البيانات
+to create a database backup
 
-./restore-db.sh <ملف النسخ الاحتياطي>
-لاستعادة قاعدة البيانات من نسخة احتياطية
+./restore-db.sh <backup-file>
+to restore the database from a backup
 
 ./setup-backup-cron.sh
-لإعداد النسخ الاحتياطي التلقائي اليومي
+to configure daily automatic backups
 
 ./monitor.sh
-لمراقبة حالة الحاويات واستخدام الموارد
+to monitor container status and resource usage
 EOF
 
-print_message "$YELLOW" "تم حفظ معلومات الاتصال في ملف 'connection-info.txt'"
+print_message "$YELLOW" "Contact information saved to 'connection-info.txt'"

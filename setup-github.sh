@@ -6,23 +6,23 @@ GITHUB_USERNAME="your-github-username"  # قم بتغيير هذا إلى اسم
 
 # التحقق من تثبيت Git
 if ! command -v git &> /dev/null; then
-    echo "Git غير مثبت. جاري التثبيت..."
+    echo "Git is not installed. Installing..."
     sudo apt-get update
     sudo apt-get install -y git
 fi
 
-# إنشاء مجلد المشروع إذا لم يكن موجودًا
+# Creating project directory...ا لم يكن موجودًا
 if [ ! -d "$REPO_NAME" ]; then
-    echo "إنشاء مجلد المشروع..."
+    echo "Creating project directory..."
     mkdir -p "$REPO_NAME"
 fi
 
 # الانتقال إلى مجلد المشروع
 cd "$REPO_NAME"
 
-# تهيئة مستودع Git إذا لم يكن موجودًا
+# Initializing Git repository...ا لم يكن موجودًا
 if [ ! -d ".git" ]; then
-    echo "تهيئة مستودع Git..."
+    echo "Initializing Git repository..."
     git init
     git branch -M main
 fi
@@ -154,30 +154,30 @@ git add .gitignore README.md .env.example
 git commit -m "إعداد المشروع الأولي"
 
 # إضافة مستودع GitHub كمصدر بعيد
-echo "هل تريد إنشاء مستودع على GitHub الآن؟ (y/n)"
+echo "Do you want to create a GitHub repository now? (y/n)"
 read create_repo
 
 if [ "$create_repo" = "y" ]; then
     # التحقق من تثبيت GitHub CLI
     if ! command -v gh &> /dev/null; then
-        echo "GitHub CLI غير مثبت. جاري التثبيت..."
+        echo "GitHub CLI is not installed. Installing..."
         sudo apt-get update
         sudo apt-get install -y gh
     fi
     
     # تسجيل الدخول إلى GitHub إذا لم يكن مسجلاً بالفعل
     if ! gh auth status &> /dev/null; then
-        echo "الرجاء تسجيل الدخول إلى GitHub..."
+        echo "Please log in to GitHub..."
         gh auth login
     fi
     
     # إنشاء مستودع على GitHub
-    echo "إنشاء مستودع على GitHub..."
+    echo "Creating GitHub repository..."
     gh repo create "$REPO_NAME" --private --source=. --remote=origin --push
 else
-    echo "يمكنك إنشاء مستودع على GitHub يدويًا وإضافته كمصدر بعيد باستخدام:"
+    echo "You can create a GitHub repository manually and add it as a remote using:"
     echo "git remote add origin https://github.com/$GITHUB_USERNAME/$REPO_NAME.git"
     echo "git push -u origin main"
 fi
 
-echo "تم إعداد المشروع بنجاح!"
+echo "Project setup completed successfully!"

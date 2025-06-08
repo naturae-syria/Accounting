@@ -130,5 +130,5 @@ print_message "$YELLOW" "You can access the app at: http://localhost:3000"
 print_message "$YELLOW" "You can access the app through Nginx at: http://localhost"
 
 print_message "$BLUE" "
-للمزيد من المعلومات، راجع ملف 'connection-info.txt'
+For more information, see the 'connection-info.txt' file
 "

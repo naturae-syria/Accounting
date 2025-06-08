@@ -2,7 +2,7 @@
 
 # التحقق من تثبيت Fail2Ban
 if ! command -v fail2ban-server &> /dev/null; then
-    echo "Fail2Ban غير مثبت. جاري التثبيت..."
+    echo "Fail2Ban is not installed. Installing..."
     sudo apt-get update
     sudo apt-get install -y fail2ban
 fi
@@ -29,4 +29,4 @@ EOL
 # إعادة تشغيل Fail2Ban
 sudo systemctl restart fail2ban
 
-echo "تم إعداد Fail2Ban بنجاح!"
+echo "Fail2Ban setup completed successfully!"

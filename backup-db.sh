@@ -15,4 +15,4 @@ pg_dump -U $DB_USER $DB_NAME | gzip > $BACKUP_DIR/$DB_NAME-$DATE.sql.gz
 # الاحتفاظ بالنسخ الاحتياطية لمدة 30 يومًا فقط
 find $BACKUP_DIR -type f -name "*.sql.gz" -mtime +30 -delete
 
-echo "تم إنشاء نسخة احتياطية في: $BACKUP_DIR/$DB_NAME-$DATE.sql.gz"
+echo "Backup created at: $BACKUP_DIR/$DB_NAME-$DATE.sql.gz"
