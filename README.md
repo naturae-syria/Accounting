@@ -39,7 +39,7 @@ sudo bash install-debian.sh
 pnpm install
 ```
 
-3. Create a `.env` file (or export the variables in your shell) with the following variables:
+3. Copy `.env.example` to `.env` (or export the variables in your shell) and update the values as needed:
 
 ```env
 DB_USER=postgres
