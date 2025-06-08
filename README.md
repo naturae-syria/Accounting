@@ -26,6 +26,7 @@ export APP_DIR=/opt/accounting-system
 export DB_USER=accounting
 export DB_NAME=accounting_db
 export DB_PASSWORD=secret
+export REPO_URL=https://github.com/naturae-syria/Accounting.git
 sudo bash install-debian.sh
 ```
 

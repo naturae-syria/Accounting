@@ -1,9 +1,13 @@
 #!/bin/bash
+set -e
 
 # تكوين المتغيرات
 APP_NAME="accounting-system"
-GITHUB_USERNAME="your-github-username"  # قم بتغيير هذا إلى اسم المستخدم الخاص بك على GitHub
-GITHUB_REPO="accounting-distribution-system"
+# allow overriding the repository to clone. Defaults to the public repository
+# hosting this project to avoid authentication prompts during setup.
+GITHUB_USERNAME=${GITHUB_USERNAME:-naturae-syria}
+GITHUB_REPO=${GITHUB_REPO:-Accounting}
+REPO_URL=${REPO_URL:-"https://github.com/${GITHUB_USERNAME}/${GITHUB_REPO}.git"}
 # اسم النطاق اختياري. الافتراضي هو localhost ويمكن تعديله لاحقًا
 DOMAIN=${DOMAIN:-localhost}
 USE_SSL=${USE_SSL:-false}
@@ -35,7 +39,7 @@ echo "استنساخ المستودع..."
 APP_DIR="/var/www/$APP_NAME"
 sudo mkdir -p "$APP_DIR"
 sudo chown $(whoami):$(whoami) "$APP_DIR"
-git clone https://github.com/$GITHUB_USERNAME/$GITHUB_REPO.git "$APP_DIR"
+git clone "$REPO_URL" "$APP_DIR"
 cd "$APP_DIR"
 
 # تثبيت الاعتماديات
