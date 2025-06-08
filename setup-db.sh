@@ -42,6 +42,10 @@ export DB_PASSWORD=$DB_PASSWORD
 export DB_PORT=$DB_PORT
 
 # تشغيل سكريبت تهيئة قاعدة البيانات
+if [ ! -x node_modules/.bin/ts-node ]; then
+    echo "Node dependencies not installed. Attempting to install..."
+    pnpm install || true
+fi
 pnpm run init-db
 
 echo "Database setup completed!"
