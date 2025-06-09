@@ -150,6 +150,29 @@ EOL
   sudo nginx -t && sudo systemctl restart nginx
 }
 
+# Display usage information
+show_help() {
+  cat <<EOF
+NexAccount - manage the accounting system
+
+Usage: NexAccount <command>
+
+Commands:
+  Start      Start the application and show status information
+  Stop       Stop the application
+  Restart    Restart the application and show status information
+  Status     Display the current service status and access URLs
+  Update     Pull latest code, install dependencies and restart
+  DbUpdate   Verify database structure and update related files
+  Firewall   Ensure UFW firewall is configured and running
+  Webserver  Ensure Nginx is configured and running
+  Delete     Remove the PM2 process
+  Log        Display recent service logs
+  Help       Show this help message
+
+EOF
+}
+
 # Always operate from the application directory
 cd "$APP_DIR" 2>/dev/null || {
   echo "Application directory $APP_DIR not found"
@@ -218,8 +241,13 @@ case "$COMMAND" in
   log|logs)
     display_logs
     ;;
+  help|-h|--help|"")
+    show_help
+    ;;
   *)
-    echo "Usage: NexAccount {Start|Stop|Restart|Status|Update|DbUpdate|Firewall|Webserver|Delete|Log}"
+    echo "Unknown command: $1"
+    echo
+    show_help
     exit 1
     ;;
 esac
