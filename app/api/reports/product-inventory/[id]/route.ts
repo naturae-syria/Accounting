@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getProductInventoryReport } from "@/lib/db"
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: any) {
   try {
     const id = params.id
     const report = await getProductInventoryReport(id)

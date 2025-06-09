@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { deleteCustomReport } from "@/lib/db"
 
-export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_request: Request, { params }: any) {
   try {
     const id = params.id
     const success = await deleteCustomReport(id)
