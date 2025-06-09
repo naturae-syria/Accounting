@@ -73,6 +73,9 @@ For production build and start:
 pnpm build
 pnpm start
 ```
+By default the server listens on port 3000. Open `http://localhost:3000` in your browser (or replace `localhost` with your server's IP or domain).
+If you define the `NEXT_BASE_PATH` environment variable when building, append that path to the URL (e.g. `http://localhost:3000$NEXT_BASE_PATH`).
+
 
 ## Custom reports
 
@@ -143,6 +146,8 @@ After running `setup-all.sh`, the install summary shows whether HTTPS was enable
 
 - **HTTP**: `http://<your-domain-or-ip>` on port **80**
 - **HTTPS**: `https://<your-domain-or-ip>` on port **443`** (when SSL is enabled)
+- **Direct**: `http://<your-domain-or-ip>:3000` if Nginx is not configured or port 80 shows the default page.
+Nginx must be configured using `setup-nginx.sh` (or via `setup-all.sh`) for ports 80 and 443 to serve the app.
 
 ### Service logs
 
