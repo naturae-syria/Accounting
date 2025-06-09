@@ -240,7 +240,7 @@ mkdir -p init-scripts
 # إنشاء ملف تكوين Nginx
 cat > nginx/conf.d/default.conf << 'EOF'
 server {
-    listen 80;
+    listen 80 default_server;
     server_name _;
 
     location / {

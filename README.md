@@ -76,6 +76,22 @@ pnpm start
 By default the server listens on port 3000. Open `http://localhost:3000` in your browser (or replace `localhost` with your server's IP or domain).
 If you define the `NEXT_BASE_PATH` environment variable when building, append that path to the URL (e.g. `http://localhost:3000$NEXT_BASE_PATH`).
 
+## Using Docker
+
+The repository includes a `docker-compose.yml` file that starts the application,
+PostgreSQL and an Nginx reverse proxy. To launch the stack:
+
+```bash
+docker-compose up -d
+```
+
+Access the app via `http://localhost` once the containers are running. When
+finished, stop the services with:
+
+```bash
+docker-compose down
+```
+
 
 ## Custom reports
 
