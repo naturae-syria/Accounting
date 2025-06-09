@@ -29,18 +29,6 @@ for cmd in git node pnpm; do
     fi
 done
 
-# Ensure helper scripts are executable
-[ ! -x ./setup-db.sh ] && chmod +x ./setup-db.sh
-[ ! -x ./setup-redis.sh ] && chmod +x ./setup-redis.sh
-
-# إعداد قاعدة البيانات
-echo "Setting up the database..."
-./setup-db.sh
-
-# إعداد Redis
-echo "Setting up Redis..."
-./setup-redis.sh
-
 # استنساخ المستودع
 echo "Cloning the repository..."
 APP_DIR="/var/www/$APP_NAME"
@@ -49,13 +37,25 @@ sudo chown $(whoami):$(whoami) "$APP_DIR"
 git clone "$REPO_URL" "$APP_DIR"
 cd "$APP_DIR"
 
-# تثبيت الاعتماديات
+# Ensure helper scripts are executable inside the repository
+[ ! -x ./setup-db.sh ] && chmod +x ./setup-db.sh
+[ ! -x ./setup-redis.sh ] && chmod +x ./setup-redis.sh
+
+# تثبيت الاعتماديات قبل إعداد قاعدة البيانات
 echo "Installing dependencies..."
 pnpm install
 if [ ! -x node_modules/.bin/ts-node ]; then
     echo "ts-node not found after install. Attempting global install..."
     pnpm add -D ts-node || sudo npm install -g ts-node || true
 fi
+
+# إعداد قاعدة البيانات
+echo "Setting up the database..."
+./setup-db.sh
+
+# إعداد Redis
+echo "Setting up Redis..."
+./setup-redis.sh
 
 # إنشاء ملف .env
 # إنشاء ملف .env
