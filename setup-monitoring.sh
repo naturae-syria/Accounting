@@ -7,9 +7,17 @@ sudo apt-get install -y prometheus
 
 # تثبيت Grafana
 echo "Installing Grafana..."
-sudo apt-get install -y apt-transport-https software-properties-common
-sudo add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
-wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
+sudo apt-get install -y apt-transport-https software-properties-common wget gpg
+
+# Import Grafana GPG key using the modern keyring location
+sudo mkdir -p /etc/apt/keyrings
+wget -q -O- https://packages.grafana.com/gpg.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/grafana.gpg
+
+# Add the Grafana repository using the signed-by option
+echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://packages.grafana.com/oss/deb stable main" | \
+  sudo tee /etc/apt/sources.list.d/grafana.list
+
 sudo apt-get update
 sudo apt-get install -y grafana
 
