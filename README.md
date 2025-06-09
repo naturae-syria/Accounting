@@ -103,6 +103,9 @@ This command runs from `/var/www/accounting-system`, so you can invoke `NexAccou
   NexAccount Status
   ```
 
+Each of the `Start`, `Restart` and `Status` commands prints the current
+service state along with the URLs for accessing the application.
+
 - **Update** the application
 
   ```bash

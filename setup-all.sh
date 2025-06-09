@@ -131,3 +131,11 @@ fi
 echo "PM2 process '$APP_NAME': $PM2_STATUS"
 echo "Use the 'NexAccount' command to manage the application (Start|Stop|Restart|Status|Update|Delete)."
 echo "If any service is not active you may need to restart the server."
+
+# Display how to access the application
+IP_ADDRESS=$(hostname -I | awk '{print $1}')
+echo "\nAccess the application via:"
+echo " - HTTP:  http://$DOMAIN (IP: $IP_ADDRESS, port 80)"
+if [ "$USE_SSL" = "true" ]; then
+    echo " - HTTPS: https://$DOMAIN (IP: $IP_ADDRESS, port 443)"
+fi
