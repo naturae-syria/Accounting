@@ -104,6 +104,10 @@ sudo chmod +x /usr/local/bin/backup-db.sh
 echo "Setting up Fail2Ban..."
 ./setup-fail2ban.sh
 
+# إعداد الجدار الناري
+echo "Configuring the firewall..."
+./setup-firewall.sh
+
 # إعداد المراقبة
 echo "Setting up monitoring..."
 ./setup-monitoring.sh

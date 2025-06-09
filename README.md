@@ -115,3 +115,24 @@ This command runs from `/var/www/accounting-system`, so you can invoke `NexAccou
   NexAccount Delete
   ```
 
+### Accessing the application
+
+After running `setup-all.sh`, the install summary shows whether HTTPS was enabled. By default the site is available at:
+
+- **HTTP**: `http://<your-domain-or-ip>` on port **80**
+- **HTTPS**: `https://<your-domain-or-ip>` on port **443`** (when SSL is enabled)
+
+### Service logs
+
+Logs for the major components can be found in the following locations:
+
+- **Nginx**: `/var/log/nginx/`
+- **PM2/Application**: `~/.pm2/logs/`
+- **PostgreSQL**: `/var/log/postgresql/`
+- **Fail2Ban**: `/var/log/fail2ban.log`
+- **UFW firewall**: `/var/log/ufw.log`
+
+### Firewall
+
+`setup-firewall.sh` configures UFW to open ports 22, 80, 443 and 3000 so the project operates correctly.
+
