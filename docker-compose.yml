@@ -47,20 +47,21 @@ services:
   #   networks:
   #     - app-network
 
-  # إذا كنت تريد استخدام Nginx كبروكسي عكسي، قم بإلغاء التعليق على الخدمة التالية
-  # nginx:
-  #   image: nginx:alpine
-  #   restart: always
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - ./nginx/conf.d:/etc/nginx/conf.d
-  #     - ./nginx/ssl:/etc/nginx/ssl
-  #   depends_on:
-  #     - app
-  #   networks:
-  #     - app-network
+  # خدمة Nginx تعمل كبروكسي عكسي أمام التطبيق
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./public:/usr/share/nginx/html
+    depends_on:
+      - app
+    networks:
+      - app-network
 
 networks:
   app-network:
