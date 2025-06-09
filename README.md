@@ -143,5 +143,5 @@ Logs for the major components can be found in the following locations:
 
 ### Firewall
 
-`setup-firewall.sh` configures UFW to open ports 22, 80, 443 and 3000 so the project operates correctly.
+`setup-firewall.sh` configures UFW to open ports 22, 80, 443, 3000, 5432, 6379, 9090 and 9100 so the project operates correctly.
 
