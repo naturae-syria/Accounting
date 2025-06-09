@@ -4,6 +4,7 @@ import "./globals.css"
 
 // استيراد خط Tajawal باستخدام next/font/google
 import { Tajawal } from "next/font/google"
+import { APP_VERSION } from "@/lib/version"
 
 // تكوين خط Tajawal
 const tajawal = Tajawal({
@@ -16,7 +17,7 @@ const tajawal = Tajawal({
 export const metadata: Metadata = {
   title: "نظام إدارة المحاسبة والتوزيع - شركة المؤيد العالمية",
   description: "نظام متكامل لإدارة المحاسبة وتوزيع المنتجات",
-    generator: 'v0.dev'
+  generator: `Accounting Distribution System v${APP_VERSION}`,
 }
 
 export default function RootLayout({
