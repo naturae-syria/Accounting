@@ -2,7 +2,8 @@
 const nextConfig = {
   // استخدام الوضع المستقل للسماح بتشغيل الخادم الكامل
   output: 'standalone',
-  basePath: process.env.NODE_ENV === 'production' ? '/accounting-distribution-system' : '',
+  // Allow overriding the base path via NEXT_BASE_PATH to support subpath deployments
+  basePath: process.env.NEXT_BASE_PATH || '',
   trailingSlash: true, // إضافة شرطة مائلة في نهاية المسارات لتحسين التوافق مع GitHub Pages
   eslint: {
     ignoreDuringBuilds: true,
