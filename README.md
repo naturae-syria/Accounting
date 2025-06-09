@@ -35,6 +35,10 @@ sudo bash install-debian.sh
 Temporary files generated during installation are automatically removed by
 `cleanup-temp.sh` which runs at the end of the installer.
 
+The installer also downloads the **Tajawal** font using `download-fonts.sh` so
+the build can run offline. Font files are not stored in the repository and will
+be placed under `public/fonts/Tajawal` after running the script.
+
 ## Manual setup
 
 1. Install Node.js, pnpm, PostgreSQL and Redis on your machine.
@@ -42,6 +46,13 @@ Temporary files generated during installation are automatically removed by
 
 ```bash
 pnpm install
+```
+
+After installing dependencies, run `download-fonts.sh` to fetch the Tajawal font
+files locally. The fonts will be added to `public/fonts/Tajawal`:
+
+```bash
+./download-fonts.sh
 ```
 
 3. Copy `.env.example` to `.env` (or export the variables in your shell) and update the values as needed:

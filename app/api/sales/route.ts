@@ -18,9 +18,10 @@ export async function POST(request: NextRequest) {
     const sale = await request.json()
     const newSale = await addSale(sale)
     return NextResponse.json(newSale, { status: 201 })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("خطأ في إضافة عملية البيع:", error)
-    return NextResponse.json({ error: "حدث خطأ أثناء إضافة عملية البيع", message: error.message }, { status: 500 })
+    const message = error instanceof Error ? error.message : String(error)
+    return NextResponse.json({ error: "حدث خطأ أثناء إضافة عملية البيع", message }, { status: 500 })
   }
 }
 
