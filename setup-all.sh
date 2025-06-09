@@ -139,3 +139,7 @@ echo " - HTTP:  http://$DOMAIN (IP: $IP_ADDRESS, port 80)"
 if [ "$USE_SSL" = "true" ]; then
     echo " - HTTPS: https://$DOMAIN (IP: $IP_ADDRESS, port 443)"
 fi
+
+# Remove temporary files created during installation
+echo "Cleaning up temporary files..."
+./cleanup-temp.sh
