@@ -35,9 +35,9 @@ sudo bash install-debian.sh
 Temporary files generated during installation are automatically removed by
 `cleanup-temp.sh` which runs at the end of the installer.
 
-The installer also downloads the **Tajawal** font using `download-fonts.sh` so
-the build can run offline. Font files are not stored in the repository and will
-be placed under `public/fonts/Tajawal` after running the script.
+The installer also downloads the **Tajawal** font so the build can run offline.
+Font files are not stored in the repository and will be placed under
+`public/fonts/Tajawal` after running the script.
 
 ## Manual setup
 
@@ -48,12 +48,8 @@ be placed under `public/fonts/Tajawal` after running the script.
 pnpm install
 ```
 
-After installing dependencies, run `download-fonts.sh` to fetch the Tajawal font
-files locally. The fonts will be added to `public/fonts/Tajawal`:
-
-```bash
-./download-fonts.sh
-```
+The Tajawal font files will be downloaded automatically during installation
+and placed under `public/fonts/Tajawal`.
 
 3. Copy `.env.example` to `.env` (or export the variables in your shell) and update the values as needed:
 
