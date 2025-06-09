@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -50,11 +50,7 @@ export default function DistributionCenters() {
   })
   const { toast } = useToast()
 
-  useEffect(() => {
-    loadCenters()
-  }, [])
-
-  const loadCenters = () => {
+  const loadCenters = useCallback(() => {
     try {
       const centersData = getDistributionCenters()
       console.log("Loaded centers:", centersData)
@@ -67,7 +63,11 @@ export default function DistributionCenters() {
         variant: "destructive",
       })
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    loadCenters()
+  }, [loadCenters])
 
   const handleAddCenter = () => {
     try {

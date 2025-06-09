@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -37,11 +37,7 @@ export default function Products() {
   })
   const { toast } = useToast()
 
-  useEffect(() => {
-    loadProducts()
-  }, [])
-
-  const loadProducts = () => {
+  const loadProducts = useCallback(() => {
     try {
       const productsData = getProducts()
       console.log("Loaded products:", productsData)
@@ -54,7 +50,11 @@ export default function Products() {
         variant: "destructive",
       })
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    loadProducts()
+  }, [loadProducts])
 
   const handleAddProduct = () => {
     try {
