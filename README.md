@@ -118,6 +118,12 @@ service state along with the URLs for accessing the application.
   NexAccount Delete
   ```
 
+- **View service logs**
+
+  ```bash
+  NexAccount Log
+  ```
+
 ### Accessing the application
 
 After running `setup-all.sh`, the install summary shows whether HTTPS was enabled. By default the site is available at:

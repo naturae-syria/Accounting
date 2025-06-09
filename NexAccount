@@ -40,6 +40,27 @@ print_service_status() {
   print_access_info
 }
 
+display_logs() {
+  echo "==== Latest Logs ===="
+  echo "-- Nginx --"
+  sudo tail -n 20 /var/log/nginx/error.log 2>/dev/null || true
+
+  echo "\n-- PostgreSQL --"
+  local pg_log
+  pg_log=$(ls /var/log/postgresql/postgresql-*.log 2>/dev/null | sort | tail -n 1)
+  [ -n "$pg_log" ] && sudo tail -n 20 "$pg_log" 2>/dev/null || true
+
+  echo "\n-- UFW Firewall --"
+  sudo tail -n 20 /var/log/ufw.log 2>/dev/null || true
+
+  echo "\n-- Fail2Ban --"
+  sudo tail -n 20 /var/log/fail2ban.log 2>/dev/null || true
+
+  echo "\n-- PM2/Application --"
+  tail -n 20 ~/.pm2/logs/${APP_NAME}-out.log 2>/dev/null || true
+  tail -n 20 ~/.pm2/logs/${APP_NAME}-error.log 2>/dev/null || true
+}
+
 # Always operate from the application directory
 cd "$APP_DIR" 2>/dev/null || {
   echo "Application directory $APP_DIR not found"
@@ -67,8 +88,11 @@ case "$COMMAND" in
   delete)
     pm2 delete "$APP_NAME"
     ;;
+  log|logs)
+    display_logs
+    ;;
   *)
-    echo "Usage: NexAccount {Start|Stop|Restart|Status|Update|Delete}"
+    echo "Usage: NexAccount {Start|Stop|Restart|Status|Update|Delete|Log}"
     exit 1
     ;;
  esac
