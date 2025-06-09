@@ -6,8 +6,8 @@ import { getInventoryLog } from "@/lib/db"
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl
-    const productId = searchParams.get("productId")
-    const centerId = searchParams.get("centerId")
+    const productId = searchParams.get("productId") ?? undefined
+    const centerId = searchParams.get("centerId") ?? undefined
 
     const logs = await getInventoryLog(productId, centerId)
     return NextResponse.json(logs)

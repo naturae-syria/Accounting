@@ -18,8 +18,9 @@ export async function GET() {
     return NextResponse.json({ success: true, message: "تم تهيئة قاعدة البيانات بنجاح" })
   } catch (error) {
     console.error("خطأ في تهيئة قاعدة البيانات:", error)
+    const errorMessage = error instanceof Error ? error.message : String(error)
     return NextResponse.json(
-      { success: false, message: "حدث خطأ أثناء تهيئة قاعدة البيانات", error: error.message },
+      { success: false, message: "حدث خطأ أثناء تهيئة قاعدة البيانات", error: errorMessage },
       { status: 500 },
     )
   }

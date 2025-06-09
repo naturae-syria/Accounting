@@ -1,6 +1,6 @@
 // هذا مثال لكيفية تعديل دالة getProducts في lib/db.ts لدعم التخزين المؤقت
 import { getCache, setCache, invalidateCache } from "./redis"
-import type { Product } from "./definitions"
+import type { Product } from "./types"
 import { pool } from "./db"
 
 export const getProducts = async (): Promise<Product[]> => {

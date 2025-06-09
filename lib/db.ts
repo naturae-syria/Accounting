@@ -9,7 +9,7 @@ import type {
 import { env } from "./env"
 
 // إعداد الاتصال بقاعدة البيانات
-const pool = new Pool({
+export const pool = new Pool({
   user: env.DB_USER,
   host: env.DB_HOST,
   database: env.DB_NAME,
