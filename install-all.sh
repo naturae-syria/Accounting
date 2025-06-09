@@ -530,8 +530,8 @@ cat > package.json << 'EOF'
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "autoprefixer": "10.4.14",
-    "eslint": "^9.1.0",
-    "eslint-config-next": "13.4.9",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.2.29",
     "postcss": "8.4.25",
     "tailwindcss": "3.3.2",
     "typescript": "5.1.6"
