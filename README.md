@@ -76,6 +76,17 @@ pnpm start
 By default the server listens on port 3000. Open `http://localhost:3000` in your browser (or replace `localhost` with your server's IP or domain).
 If you define the `NEXT_BASE_PATH` environment variable when building, append that path to the URL (e.g. `http://localhost:3000$NEXT_BASE_PATH`).
 
+## Development
+
+Run `pnpm install` before executing any lint checks:
+
+```bash
+pnpm install
+npm run lint
+```
+
+The CI workflow also runs `pnpm install` before `npm run lint` to ensure dependencies are present.
+
 ## Using Docker
 
 The repository includes a `docker-compose.yml` file for running the application
