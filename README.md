@@ -81,6 +81,8 @@ For production deployments the application can be managed using **PM2**. After r
 The `setup-all.sh` script also installs a helper command named `NexAccount` in `/usr/local/bin` to make management easier.
 This command runs from `/var/www/accounting-system`, so you can invoke `NexAccount` anywhere on the system.
 
+Run `NexAccount help` to display a summary of all available commands.
+
 - **Start** the application
 
   ```bash
@@ -124,6 +126,12 @@ service state along with the URLs for accessing the application.
 
   ```bash
   NexAccount Log
+  ```
+
+- **Help**
+
+  ```bash
+  NexAccount help
   ```
 
 ### Accessing the application
