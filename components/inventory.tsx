@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -45,11 +45,7 @@ export default function Inventory() {
   const [productInventoryReport, setProductInventoryReport] = useState<any[]>([])
   const { toast } = useToast()
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
-  const loadData = () => {
+  const loadData = useCallback(() => {
     try {
       const productsData = getProducts()
       const centersData = getDistributionCenters()
@@ -66,7 +62,11 @@ export default function Inventory() {
         variant: "destructive",
       })
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const handleAdjustInventory = () => {
     if (!currentProduct || !adjustmentCenterId) return
