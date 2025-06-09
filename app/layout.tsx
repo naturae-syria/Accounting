@@ -3,13 +3,38 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 // استيراد خط Tajawal باستخدام next/font/google
-import { Tajawal } from "next/font/google"
+import localFont from "next/font/local"
 import { APP_VERSION } from "@/lib/version"
 
 // تكوين خط Tajawal
-const tajawal = Tajawal({
-  subsets: ["arabic"],
-  weight: ["300", "400", "500", "700", "800"],
+const tajawal = localFont({
+  src: [
+    {
+      path: "../public/fonts/Tajawal/Tajawal-Light.ttf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Tajawal/Tajawal-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Tajawal/Tajawal-Medium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Tajawal/Tajawal-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Tajawal/Tajawal-ExtraBold.ttf",
+      weight: "800",
+      style: "normal",
+    },
+  ],
   variable: "--font-tajawal",
   display: "swap",
 })
