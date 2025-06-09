@@ -19,7 +19,10 @@ echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://packages.grafana.com
   sudo tee /etc/apt/sources.list.d/grafana.list
 
 sudo apt-get update
-sudo apt-get install -y grafana
+if ! sudo apt-get install -y grafana; then
+  echo "Failed to install Grafana. Please check your network connection and repository configuration." >&2
+  exit 1
+fi
 
 # تكوين Prometheus
 sudo tee /etc/prometheus/prometheus.yml > /dev/null << EOL
