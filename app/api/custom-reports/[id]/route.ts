@@ -1,4 +1,4 @@
-import { type NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { deleteCustomReport } from "@/lib/db"
 
 export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
