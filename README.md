@@ -20,7 +20,7 @@ If you are running Debian 12 you can use the automated installer:
 sudo bash install-debian.sh
 ```
 
-The script installs all dependencies, clones the repository and runs `setup-all.sh` to configure the system. You can override defaults by exporting variables before running the script, e.g.:
+The script installs all dependencies, clones the repository, downloads the **Tajawal** font using `download-fonts.sh` and runs `setup-all.sh` to configure the system. The font files are fetched from the [Google Fonts GitHub repository](https://github.com/google/fonts/tree/main/ofl/tajawal) by default. You can override the URL by setting the `FONT_BASE_URL` environment variable before running the script. You can also override other defaults by exporting variables, e.g.:
 
 ```bash
 export APP_USER=myuser
@@ -44,7 +44,14 @@ Temporary files generated during installation are automatically removed by
 pnpm install
 ```
 
-3. Copy `.env.example` to `.env` (or export the variables in your shell) and update the values as needed:
+3. Download the Tajawal fonts (from GitHub by default):
+
+```bash
+./download-fonts.sh
+```
+You can set `FONT_BASE_URL` if you want to use an alternate download source.
+
+4. Copy `.env.example` to `.env` (or export the variables in your shell) and update the values as needed:
 
 ```env
 DB_USER=postgres
@@ -55,13 +62,13 @@ DB_PORT=5432
 REDIS_URL=redis://localhost:6379
 ```
 
-4. Initialize the database:
+5. Initialize the database:
 
 ```bash
 pnpm run init-db
 ```
 
-5. Start the development server:
+6. Start the development server:
 
 ```bash
 pnpm dev
