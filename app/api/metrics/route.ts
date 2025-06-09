@@ -1,30 +1,13 @@
 import { NextResponse } from "next/server"
-import { register, collectDefaultMetrics, Counter, Histogram } from "prom-client"
-
-// جمع المقاييس الافتراضية
-collectDefaultMetrics()
-
-// إنشاء مقاييس مخصصة
-const httpRequestsTotal = new Counter({
-  name: "http_requests_total",
-  help: "Total number of HTTP requests",
-  labelNames: ["method", "route", "status"],
-})
-
-const httpRequestDuration = new Histogram({
-  name: "http_request_duration_seconds",
-  help: "Duration of HTTP requests in seconds",
-  labelNames: ["method", "route", "status"],
-  buckets: [0.1, 0.3, 0.5, 0.7, 1, 3, 5, 7, 10],
-})
+import { getMetrics, metricsContentType } from "@/lib/metrics"
 
 export async function GET() {
   try {
     // جمع المقاييس وإرجاعها
-    const metrics = await register.metrics()
+    const metrics = await getMetrics()
     return new NextResponse(metrics, {
       headers: {
-        "Content-Type": register.contentType,
+        "Content-Type": metricsContentType,
       },
     })
   } catch (error) {
@@ -34,4 +17,4 @@ export async function GET() {
 }
 
 // تصدير المقاييس لاستخدامها في أماكن أخرى
-export { httpRequestsTotal, httpRequestDuration }
+// Exported metrics are imported from '@/lib/metrics'
