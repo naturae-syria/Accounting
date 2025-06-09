@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "init-db": "ts-node -P tsconfig.init.json ./lib/db.ts && echo 'Database ready'",
-    "test": "node --test"
+    "test": "node --test",
+    "postinstall": "./download-fonts.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
