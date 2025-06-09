@@ -85,6 +85,32 @@ case "$COMMAND" in
   update)
     git pull && pnpm install && pm2 restart "$APP_NAME"
     ;;
+  dbupdate)
+    NEED_UPDATE=false
+    echo "Verifying database structure..."
+    pnpm run init-db || NEED_UPDATE=true
+
+    FILES=("lib/db.ts" "next.config.mjs" "docker-compose.yml")
+    for f in "${FILES[@]}"; do
+      [ -f "$APP_DIR/$f" ] || NEED_UPDATE=true
+    done
+
+    echo "Generating static pages..."
+    pnpm build || NEED_UPDATE=true
+    [ -d "$APP_DIR/.next" ] || NEED_UPDATE=true
+
+    if [ "$NEED_UPDATE" = true ]; then
+      echo "Discrepancies found. Updating database-related files from Git..."
+      BRANCH=$(git rev-parse --abbrev-ref HEAD)
+      git fetch origin "$BRANCH"
+      git checkout "origin/$BRANCH" -- lib/db.ts next.config.mjs docker-compose.yml 2>/dev/null || true
+      pnpm install || true
+    fi
+
+    echo "Restarting services..."
+    pm2 restart "$APP_NAME"
+    systemctl restart postgresql redis-server nginx || true
+    ;;
   delete)
     pm2 delete "$APP_NAME"
     ;;
@@ -92,7 +118,7 @@ case "$COMMAND" in
     display_logs
     ;;
   *)
-    echo "Usage: NexAccount {Start|Stop|Restart|Status|Update|Delete|Log}"
+    echo "Usage: NexAccount {Start|Stop|Restart|Status|Update|DbUpdate|Delete|Log}"
     exit 1
     ;;
  esac
