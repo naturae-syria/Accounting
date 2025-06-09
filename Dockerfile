@@ -15,6 +15,8 @@ RUN pnpm install --frozen-lockfile
 # بناء التطبيق
 FROM deps AS builder
 COPY . .
+# Provide default environment variables during build by copying the example file
+COPY .env.example .env
 RUN pnpm run build
 
 # إنشاء صورة الإنتاج
@@ -25,6 +27,9 @@ ENV NODE_ENV production
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN pnpm install --frozen-lockfile --prod
+
+# Default environment variables for runtime if none are provided
+COPY --from=builder /app/.env ./
 
 # إنشاء مستخدم غير جذري لتشغيل التطبيق
 RUN addgroup --system --gid 1001 nodejs
