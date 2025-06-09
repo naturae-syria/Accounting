@@ -7,14 +7,23 @@ DOMAIN=${DOMAIN:-localhost}
 USE_SSL=${USE_SSL:-false}
 
 # السماح بتحديد نطاق مخصص عند التشغيل
+# Read domain name and sanitize input to avoid invalid characters
 read -p "Enter the domain name (default: $DOMAIN): " DOMAIN_INPUT
 DOMAIN=${DOMAIN_INPUT:-$DOMAIN}
+# Allow letters, numbers, dashes and dots only
+if [[ ! $DOMAIN =~ ^[A-Za-z0-9.-]+$ ]]; then
+    echo "Invalid domain name: $DOMAIN" >&2
+    exit 1
+fi
 
 # التحقق من تثبيت Nginx
 if ! command -v nginx &> /dev/null; then
     echo "Nginx is not installed. Installing..."
     sudo apt-get update
-    sudo apt-get install -y nginx
+    if ! sudo apt-get install -y nginx; then
+        echo "Failed to install Nginx. Check your network connection." >&2
+        exit 1
+    fi
 fi
 
 # إنشاء ملف تكوين Nginx
@@ -72,7 +81,10 @@ if [ "$USE_SSL" = "true" ]; then
     if ! command -v certbot &> /dev/null; then
         echo "Certbot is not installed. Installing..."
         sudo apt-get update
-        sudo apt-get install -y certbot python3-certbot-nginx
+        if ! sudo apt-get install -y certbot python3-certbot-nginx; then
+            echo "Failed to install Certbot." >&2
+            exit 1
+        fi
     fi
     
     # الحصول على شهادة SSL

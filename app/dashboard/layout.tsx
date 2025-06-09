@@ -19,19 +19,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     // التحقق من حالة تسجيل الدخول
     const checkAuth = () => {
-      try {
-        const isLoggedIn = localStorage.getItem("isLoggedIn") === "true"
-        if (!isLoggedIn) {
-          // إذا لم يكن المستخدم مسجل الدخول، انتقل إلى صفحة تسجيل الدخول
-          router.push("/login")
-          return
-        }
-        setMounted(true)
-      } catch (error) {
-        // في حالة وجود خطأ في الوصول إلى localStorage
-        console.error("Error checking authentication:", error)
-        router.push("/login")
+      const hasSession = document.cookie.includes('session=auth')
+      if (!hasSession) {
+        router.push('/login')
+        return
       }
+      setMounted(true)
     }
 
     // تأخير قصير للتأكد من أن الكود يعمل على جانب العميل
@@ -43,8 +36,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [router])
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn")
-    router.push("/login")
+    fetch('/api/auth/logout', { method: 'POST' }).finally(() => {
+      router.push('/login')
+    })
     toast({
       title: "تم تسجيل الخروج بنجاح",
       description: "نشكرك على استخدام نظام إدارة المحاسبة والتوزيع",
