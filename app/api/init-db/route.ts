@@ -16,10 +16,11 @@ export async function GET() {
     await seedDatabase()
 
     return NextResponse.json({ success: true, message: "تم تهيئة قاعدة البيانات بنجاح" })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("خطأ في تهيئة قاعدة البيانات:", error)
+    const message = error instanceof Error ? error.message : String(error)
     return NextResponse.json(
-      { success: false, message: "حدث خطأ أثناء تهيئة قاعدة البيانات", error: error.message },
+      { success: false, message: "حدث خطأ أثناء تهيئة قاعدة البيانات", error: message },
       { status: 500 },
     )
   }
