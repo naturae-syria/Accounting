@@ -1,5 +1,7 @@
 # Accounting Distribution System
 
+**Version 0.1**
+
 This project is a Next.js based application for managing products, distribution centers, inventory and sales. It requires a PostgreSQL database and Redis for caching.
 
 ## Prerequisites
