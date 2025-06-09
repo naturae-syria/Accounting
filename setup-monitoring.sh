@@ -5,6 +5,15 @@ echo "Installing Prometheus..."
 sudo apt-get update
 sudo apt-get install -y prometheus
 
+# تأكد من وجود مساحة قرص كافية قبل تثبيت Grafana
+AVAILABLE_SPACE_MB=$(df --output=avail / | tail -n1)
+AVAILABLE_SPACE_MB=$((AVAILABLE_SPACE_MB/1024))
+if [ "$AVAILABLE_SPACE_MB" -lt 700 ]; then
+  echo "Low disk space ($AVAILABLE_SPACE_MB MB available). Cleaning apt cache..."
+  sudo apt-get clean
+  sudo rm -rf /var/lib/apt/lists/*
+fi
+
 # تثبيت Grafana
 echo "Installing Grafana..."
 sudo apt-get install -y apt-transport-https software-properties-common wget gpg
@@ -23,6 +32,7 @@ if ! sudo apt-get install -y grafana; then
   echo "Failed to install Grafana. Please check your network connection and repository configuration." >&2
   exit 1
 fi
+sudo apt-get clean
 
 # تكوين Prometheus
 sudo tee /etc/prometheus/prometheus.yml > /dev/null << EOL
