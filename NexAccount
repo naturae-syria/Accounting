@@ -14,12 +14,14 @@ cd "$APP_DIR" 2>/dev/null || {
 case "$COMMAND" in
   start)
     pm2 start ecosystem.config.js
+    pm2 status "$APP_NAME"
     ;;
   stop)
     pm2 stop "$APP_NAME"
     ;;
   restart)
     pm2 restart "$APP_NAME"
+    pm2 status "$APP_NAME"
     ;;
   status)
     pm2 status "$APP_NAME"
