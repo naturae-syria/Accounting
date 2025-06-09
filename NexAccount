@@ -61,6 +61,95 @@ display_logs() {
   tail -n 20 ~/.pm2/logs/${APP_NAME}-error.log 2>/dev/null || true
 }
 
+# Check firewall status and apply updates if needed
+firewall_check_update() {
+  echo "==== Firewall Status ===="
+  local need_update=false
+
+  if ! command -v ufw >/dev/null; then
+    echo "UFW not installed."
+    need_update=true
+  else
+    local fw_status
+    fw_status=$(sudo ufw status 2>/dev/null | head -n1)
+    echo "UFW status: $fw_status"
+    [[ "$fw_status" == "Status: inactive" ]] && need_update=true
+
+    for p in 22 80 443 3000 5432 6379 9090 9100; do
+      sudo ufw status | grep -q "$p" || need_update=true
+    done
+  fi
+
+  if [ "$need_update" = true ]; then
+    echo "Applying firewall configuration..."
+    if ! command -v ufw >/dev/null; then
+      sudo apt-get update
+      sudo apt-get install -y ufw
+    fi
+    sudo ufw allow 22
+    sudo ufw allow 80
+    sudo ufw allow 443
+    sudo ufw allow 3000
+    sudo ufw allow 5432
+    sudo ufw allow 6379
+    sudo ufw allow 9090
+    sudo ufw allow 9100
+    sudo ufw --force enable
+  fi
+
+  sudo ufw status verbose
+}
+
+# Check web server status and apply updates if needed
+webserver_check_update() {
+  echo "==== Web Server Status ===="
+  local need_update=false
+
+  if ! command -v nginx >/dev/null; then
+    echo "Nginx not installed."
+    need_update=true
+  fi
+
+  local status
+  status=$(systemctl is-active nginx || true)
+  echo "Nginx service: $status"
+  [ "$status" != "active" ] && need_update=true
+
+  if [ ! -f "/etc/nginx/sites-available/$APP_NAME" ]; then
+    echo "Nginx configuration missing."
+    need_update=true
+  fi
+
+  if [ "$need_update" = true ]; then
+    echo "Applying web server configuration..."
+    if ! command -v nginx >/dev/null; then
+      sudo apt-get update
+      sudo apt-get install -y nginx
+    fi
+
+    local domain
+    domain=$(get_domain)
+    [ -z "$domain" ] && domain="localhost"
+    sudo tee /etc/nginx/sites-available/$APP_NAME >/dev/null <<EOL
+server {
+    listen 80;
+    server_name $domain;
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host \$host;
+        proxy_cache_bypass \$http_upgrade;
+    }
+}
+EOL
+    sudo ln -sf /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
+  fi
+
+  sudo nginx -t && sudo systemctl restart nginx
+}
+
 # Always operate from the application directory
 cd "$APP_DIR" 2>/dev/null || {
   echo "Application directory $APP_DIR not found"
@@ -111,6 +200,18 @@ case "$COMMAND" in
     pm2 restart "$APP_NAME"
     systemctl restart postgresql redis-server nginx || true
     ;;
+  firewall)
+    firewall_check_update
+    echo "Restarting related services..."
+    pm2 restart "$APP_NAME"
+    systemctl restart postgresql redis-server nginx || true
+    ;;
+  webserver)
+    webserver_check_update
+    echo "Restarting related services..."
+    pm2 restart "$APP_NAME"
+    systemctl restart postgresql redis-server nginx || true
+    ;;
   delete)
     pm2 delete "$APP_NAME"
     ;;
@@ -118,8 +219,8 @@ case "$COMMAND" in
     display_logs
     ;;
   *)
-    echo "Usage: NexAccount {Start|Stop|Restart|Status|Update|DbUpdate|Delete|Log}"
+    echo "Usage: NexAccount {Start|Stop|Restart|Status|Update|DbUpdate|Firewall|Webserver|Delete|Log}"
     exit 1
     ;;
- esac
+esac
 
