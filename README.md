@@ -78,19 +78,44 @@ If you define the `NEXT_BASE_PATH` environment variable when building, append th
 
 ## Using Docker
 
-The repository includes a `docker-compose.yml` file that starts the application,
-PostgreSQL and an Nginx reverse proxy. To launch the stack:
+The repository includes a `docker-compose.yml` file for running the application
+and its dependencies in containers.
 
-```bash
-docker-compose up -d
-```
+1. **Configure environment variables** – copy `.env.example` to `.env` and edit
+   the values for your setup.
+2. **Build the images**:
 
-Access the app via `http://localhost` once the containers are running. When
-finished, stop the services with:
+   ```bash
+   docker-compose build
+   ```
 
-```bash
-docker-compose down
-```
+3. **Start the stack and initialize the database** by running the helper
+   script:
+
+   ```bash
+   ./run-docker.sh
+   ```
+
+   The script waits for PostgreSQL to be ready and then runs the database
+   initializer before bringing the app online. Access it via
+   `http://localhost`.
+
+4. **View logs and troubleshoot** container issues:
+
+   ```bash
+   docker-compose logs -f         # Follow service logs
+   docker-compose ps              # Check container status
+   ```
+
+   If a container fails to start you can inspect it with
+   `docker-compose logs <service>` or restart it using `docker-compose
+   restart <service>`.
+
+5. **Stop the services** when finished:
+
+   ```bash
+   docker-compose down
+   ```
 
 
 ## Custom reports
