@@ -7,8 +7,8 @@ export async function GET(request: NextRequest, { params }: any) {
   try {
     const id = params.id
     const { searchParams } = request.nextUrl
-    const startDate = searchParams.get("startDate")
-    const endDate = searchParams.get("endDate")
+    const startDate = searchParams.get("startDate") ?? undefined
+    const endDate = searchParams.get("endDate") ?? undefined
 
     const report = await getSalesByCenterReport(id, startDate, endDate)
     return NextResponse.json(report)
