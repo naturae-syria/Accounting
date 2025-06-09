@@ -41,6 +41,6 @@ pm2 start ecosystem.config.js
 
 # تكوين PM2 للتشغيل عند بدء النظام
 pm2 save
-pm2 startup | grep -v "sudo" | bash
+pm2 startup systemd -u $(whoami) --hp $(eval echo ~$USER)
 
 echo "PM2 setup completed successfully!"
