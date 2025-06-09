@@ -233,6 +233,7 @@ EOF
 # إنشاء مجلد للتطبيق
 mkdir -p app
 mkdir -p public
+./download-fonts.sh
 mkdir -p nginx/conf.d
 mkdir -p nginx/ssl
 mkdir -p init-scripts
