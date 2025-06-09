@@ -691,3 +691,6 @@ to monitor container status and resource usage
 EOF
 
 print_message "$YELLOW" "Contact information saved to 'connection-info.txt'"
+
+# Remove temporary files created during installation
+./cleanup-temp.sh

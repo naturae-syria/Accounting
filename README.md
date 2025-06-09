@@ -32,6 +32,9 @@ export REPO_URL=https://github.com/naturae-syria/Accounting.git
 sudo bash install-debian.sh
 ```
 
+Temporary files generated during installation are automatically removed by
+`cleanup-temp.sh` which runs at the end of the installer.
+
 ## Manual setup
 
 1. Install Node.js, pnpm, PostgreSQL and Redis on your machine.

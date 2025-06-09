@@ -55,6 +55,9 @@ cd "$APP_DIR"
 export DB_USER DB_NAME DB_PASSWORD DB_HOST DB_PORT
 sudo -E bash setup-all.sh
 
+# Remove temporary files created during installation
+sudo bash cleanup-temp.sh
+
 echo "Installation complete."
 echo "Database user: $DB_USER"
 echo "Database name: $DB_NAME"
