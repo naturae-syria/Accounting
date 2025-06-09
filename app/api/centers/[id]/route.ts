@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getDistributionCenterById, updateDistributionCenter, deleteDistributionCenter } from "@/lib/db"
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: any) {
   try {
     const id = params.id
     const center = await getDistributionCenterById(id)
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: any) {
   try {
     const id = params.id
     const center = await request.json()
@@ -27,7 +27,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: any) {
   try {
     const id = params.id
     const success = await deleteDistributionCenter(id)
