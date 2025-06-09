@@ -21,8 +21,9 @@ fi
 echo "Creating Nginx configuration file..."
 sudo tee /etc/nginx/sites-available/$APP_NAME > /dev/null << EOL
 server {
-    listen 80;
-    server_name $DOMAIN;
+    # Handle requests on port 80 for any host by default
+    listen 80 default_server;
+    server_name $DOMAIN _;
     
     location / {
         proxy_pass http://localhost:3000;
