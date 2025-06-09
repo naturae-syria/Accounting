@@ -49,6 +49,14 @@ if [ ! -x node_modules/.bin/ts-node ]; then
     pnpm add -D ts-node || sudo npm install -g ts-node || true
 fi
 
+# Download fonts for offline builds if they are missing
+if [ ! -d public/fonts/Tajawal ]; then
+    echo "Downloading fonts..."
+    ./download-fonts.sh
+else
+    echo "Tajawal fonts already present, skipping download."
+fi
+
 # إعداد قاعدة البيانات
 echo "Setting up the database..."
 ./setup-db.sh
