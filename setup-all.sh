@@ -22,7 +22,10 @@ for cmd in git node pnpm; do
     if ! command -v $cmd &> /dev/null; then
         echo "$cmd is not installed. Installing..."
         sudo apt-get update
-        sudo apt-get install -y $cmd
+        if ! sudo apt-get install -y $cmd; then
+            echo "Failed to install $cmd" >&2
+            exit 1
+        fi
     fi
 done
 

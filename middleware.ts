@@ -6,6 +6,14 @@ export function middleware(request: NextRequest) {
   const method = request.method
   const url = request.nextUrl.pathname
 
+  // Protect dashboard routes with a simple session cookie check
+  if (url.startsWith('/dashboard')) {
+    const session = request.cookies.get('session')?.value
+    if (session !== 'auth') {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+  }
+
   // تنفيذ الطلب
   const response = NextResponse.next()
 
@@ -23,5 +31,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/api/:path*",
+  matcher: ["/api/:path*", "/dashboard/:path*"],
 }

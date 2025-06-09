@@ -6,14 +6,15 @@ import type {
   ProductInventory,
   CustomReport,
 } from "./types"
+import { env } from "./env"
 
 // إعداد الاتصال بقاعدة البيانات
 const pool = new Pool({
-  user: process.env.DB_USER || "postgres",
-  host: process.env.DB_HOST || "localhost",
-  database: process.env.DB_NAME || "accounting_system",
-  password: process.env.DB_PASSWORD || "postgres",
-  port: Number.parseInt(process.env.DB_PORT || "5432"),
+  user: env.DB_USER,
+  host: env.DB_HOST,
+  database: env.DB_NAME,
+  password: env.DB_PASSWORD,
+  port: env.DB_PORT,
 })
 
 // التحقق من الاتصال بقاعدة البيانات

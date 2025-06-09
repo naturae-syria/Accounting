@@ -11,20 +11,11 @@ export default function Home() {
   useEffect(() => {
     // التحقق من حالة تسجيل الدخول
     const checkAuth = () => {
-      try {
-        const isLoggedIn = localStorage.getItem("isLoggedIn") === "true"
-        if (isLoggedIn) {
-          // إذا كان المستخدم مسجل الدخول، انتقل إلى لوحة التحكم
-          router.push("/dashboard")
-        } else {
-          // إذا لم يكن المستخدم مسجل الدخول، انتقل إلى صفحة تسجيل الدخول
-          router.push("/login")
-        }
-      } catch (error) {
-        // في حالة وجود خطأ في الوصول إلى localStorage (مثل عند التشغيل على الخادم)
-        console.error("Error checking authentication:", error)
-        // انتقل إلى صفحة تسجيل الدخول كإجراء افتراضي
-        router.push("/login")
+      const hasSession = document.cookie.includes('session=auth')
+      if (hasSession) {
+        router.push('/dashboard')
+      } else {
+        router.push('/login')
       }
     }
 

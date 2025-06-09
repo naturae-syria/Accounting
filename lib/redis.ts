@@ -1,9 +1,10 @@
 import { createClient } from "redis"
+import { env } from "./env"
 
 // إنشاء عميل Redis
 const createRedisClient = () => {
   // إذا لم يكن هناك رابط Redis، نعيد عميل وهمي
-  if (!process.env.REDIS_URL) {
+  if (!env.REDIS_URL) {
     console.log("تحذير: REDIS_URL غير محدد. سيتم تعطيل التخزين المؤقت.")
     return {
       isOpen: true,
@@ -18,20 +19,20 @@ const createRedisClient = () => {
 
   // إنشاء عميل Redis حقيقي
   return createClient({
-    url: process.env.REDIS_URL,
+    url: env.REDIS_URL,
   })
 }
 
 const redisClient = createRedisClient()
 
 // معالجة الأخطاء
-if (process.env.REDIS_URL) {
+if (env.REDIS_URL) {
   redisClient.on("error", (err) => console.log("Redis Client Error", err))
 }
 
 // دالة للاتصال بـ Redis
 export async function connectRedis() {
-  if (!redisClient.isOpen && process.env.REDIS_URL) {
+  if (!redisClient.isOpen && env.REDIS_URL) {
     await redisClient.connect()
   }
   return redisClient

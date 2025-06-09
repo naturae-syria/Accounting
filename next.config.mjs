@@ -6,10 +6,12 @@ const nextConfig = {
   basePath: process.env.NEXT_BASE_PATH || '',
   trailingSlash: true, // إضافة شرطة مائلة في نهاية المسارات لتحسين التوافق مع GitHub Pages
   eslint: {
-    ignoreDuringBuilds: true,
+    // Ensure lint errors fail the build to surface problems early
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    // Do not ignore TypeScript errors so CI/CD can catch them
+    ignoreBuildErrors: false,
   },
   images: {
     unoptimized: true, // ضروري للنشر على GitHub Pages
