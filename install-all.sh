@@ -101,6 +101,7 @@ print_message "$BLUE" "Creating configuration files..."
 DB_PASSWORD=$(generate_password 16)
 REDIS_PASSWORD=$(generate_password 16)
 APP_SECRET=$(generate_password 32)
+DB_PORT_HOST=5432
 
 # إنشاء ملف Dockerfile
 cat > Dockerfile << 'EOF'
@@ -191,7 +192,7 @@ services:
       - POSTGRES_PASSWORD=$DB_PASSWORD
       - POSTGRES_DB=accounting_system
     ports:
-      - "5432:5432"
+      - "${DB_PORT_HOST}:5432"
     networks:
       - app-network
 
@@ -548,7 +549,7 @@ docker-compose up -d
 
 echo "Application started successfully!"
 echo "You can access the application at: http://localhost:3000"
-echo "You can access the database at: localhost:5432"
+echo "You can access the database at: localhost:$DB_PORT_HOST"
 echo "You can access Redis at: localhost:6379"
 EOF
 
@@ -595,7 +596,7 @@ print_message "$BLUE" "
 
 print_message "$YELLOW" "PostgreSQL database:"
 echo "Host: localhost"
-echo "Port: 5432"
+echo "Port: $DB_PORT_HOST"
 echo "Username: postgres"
 echo "Password: $DB_PASSWORD"
 echo "Database name: accounting_system"
@@ -649,7 +650,7 @@ cat > connection-info.txt << EOF
 
 PostgreSQL database:
 Host: localhost
-Port: 5432
+Port: $DB_PORT_HOST
 Username: postgres
 Password: $DB_PASSWORD
 Database name: accounting_system
