@@ -5,6 +5,7 @@ import "./globals.css"
 // استيراد خط Tajawal باستخدام next/font/google
 import localFont from "next/font/local"
 import { APP_VERSION } from "@/lib/version"
+import { CachesPolyfill } from "@/components/caches-polyfill"
 
 // تكوين خط Tajawal
 const tajawal = localFont({
@@ -52,7 +53,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={`${tajawal.variable} font-tajawal`}>{children}</body>
+      <body className={`${tajawal.variable} font-tajawal`}>
+        <CachesPolyfill />
+        {children}
+      </body>
     </html>
   )
 }
