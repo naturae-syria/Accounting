@@ -59,6 +59,8 @@ DB_HOST=localhost
 DB_NAME=accounting_system
 DB_PASSWORD=postgres
 DB_PORT=5432
+# Host port for PostgreSQL when using Docker
+DB_PORT_HOST=5432
 # Alternatively you can use a single connection string
 # DATABASE_URL=postgres://user:password@localhost:5432/accounting_system
 REDIS_URL=redis://localhost:6379
@@ -103,6 +105,8 @@ and its dependencies in containers.
 
 1. **Configure environment variables** – copy `.env.example` to `.env` and edit
    the values for your setup.
+   If port `5432` is already in use on your host, set `DB_PORT_HOST` to a free
+   port number before starting the containers.
 2. **Build the images**:
 
    ```bash
