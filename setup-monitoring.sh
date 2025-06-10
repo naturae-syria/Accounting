@@ -18,13 +18,13 @@ fi
 echo "Installing Grafana..."
 sudo apt-get install -y apt-transport-https software-properties-common wget gpg
 
-# Import Grafana GPG key using the modern keyring location
-sudo mkdir -p /etc/apt/keyrings
-wget -q -O- https://packages.grafana.com/gpg.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/grafana.gpg
+# Import Grafana GPG key using a system keyring
+sudo mkdir -p /usr/share/keyrings
+wget -qO- https://packages.grafana.com/gpg.key | \
+  sudo gpg --dearmor | sudo tee /usr/share/keyrings/grafana-archive-keyring.gpg > /dev/null
 
-# Add the Grafana repository using the signed-by option
-echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://packages.grafana.com/oss/deb stable main" | \
+# Add the Grafana repository and reference the keyring
+echo "deb [signed-by=/usr/share/keyrings/grafana-archive-keyring.gpg] https://packages.grafana.com/oss/deb stable main" | \
   sudo tee /etc/apt/sources.list.d/grafana.list
 
 sudo apt-get update
