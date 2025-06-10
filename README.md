@@ -104,9 +104,9 @@ The repository includes a `docker-compose.yml` file for running the application
 and its dependencies in containers.
 
 1. **Configure environment variables** – copy `.env.example` to `.env` and edit
-   the values for your setup.
-   If port `5432` is already in use on your host, set `DB_PORT_HOST` to a free
-   port number before starting the containers.
+   the values for your setup. The `run-docker.sh` script automatically selects a
+   free host port for PostgreSQL if the configured `DB_PORT_HOST` is in use, so
+   you usually don't need to change it manually.
 2. **Build the images**:
 
    ```bash
