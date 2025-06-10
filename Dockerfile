@@ -30,6 +30,9 @@ RUN pnpm install --frozen-lockfile --prod
 
 # Default environment variables for runtime if none are provided
 COPY --from=builder /app/.env ./
+# Copy database initialization script and make it executable
+COPY --from=builder /app/init-db.sh ./init-db.sh
+RUN chmod +x init-db.sh
 
 # إنشاء مستخدم غير جذري لتشغيل التطبيق
 RUN addgroup --system --gid 1001 nodejs
