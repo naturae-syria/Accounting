@@ -136,7 +136,7 @@ and its dependencies in containers.
    docker-compose down
    ```
 
-For a completely automated installation that clones the repository's `docker` branch and sets up Docker with all dependencies, run:
+For a completely automated installation that clones the repository's `Docker` branch and sets up Docker with all dependencies, run:
 
 ```bash
 bash install-docker-e2e.sh
