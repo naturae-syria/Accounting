@@ -61,6 +61,10 @@ DB_PASSWORD=postgres
 DB_PORT=5432
 REDIS_URL=redis://localhost:6379
 ```
+If you are running the stack with Docker, set `DB_HOST=db` so the application
+can reach the database container. For a remote PostgreSQL instance, replace
+`localhost` with the appropriate host name.
+When building without access to a database (for example when exporting static pages), set `SKIP_DB=true` to skip initialization.
 
 5. Initialize the database:
 

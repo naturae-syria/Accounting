@@ -7,4 +7,5 @@ test('environment variables are loaded', () => {
   assert.ok(env.DB_NAME)
   assert.ok(env.DB_PASSWORD)
   assert.ok(typeof env.DB_PORT === 'number')
+  assert.equal(typeof env.SKIP_DB, 'boolean')
 })

@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server"
 import { initializeDatabase, seedDatabase, testConnection } from "@/lib/db"
+import { env } from "@/lib/env"
 
 export async function GET() {
+  if (env.SKIP_DB) {
+    console.log("Skipping database initialization: SKIP_DB=true")
+    return NextResponse.json({
+      success: true,
+      message: "Skipping database initialization",
+    })
+  }
   try {
     // اختبار الاتصال بقاعدة البيانات
     const connected = await testConnection()

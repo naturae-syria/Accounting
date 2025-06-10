@@ -9,6 +9,7 @@ const envSchema = z.object({
   REDIS_URL: z.string().url().optional(),
   ADMIN_USER: z.string().default('admin'),
   ADMIN_PASS: z.string().default('admin123'),
+  SKIP_DB: z.coerce.boolean().optional().default(false),
 })
 
 export const env = envSchema.parse(process.env)
