@@ -100,7 +100,8 @@ The repository includes a `docker-compose.yml` file for running the application
 and its dependencies in containers.
 
 1. **Configure environment variables** – copy `.env.example` to `.env` and edit
-   the values for your setup.
+   the values for your setup. If port `5432` is in use on your host machine set
+   `HOST_DB_PORT` to a different free port.
 2. **Build the images**:
 
    ```bash
@@ -135,7 +136,7 @@ and its dependencies in containers.
    docker-compose down
    ```
 
-For a completely automated installation that clones the repository's `docker` branch and sets up Docker with all dependencies, run:
+For a completely automated installation that clones the repository's `Docker` branch and sets up Docker with all dependencies, run:
 
 ```bash
 bash install-docker-e2e.sh

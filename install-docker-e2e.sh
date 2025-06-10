@@ -4,7 +4,8 @@ set -e
 # Repository information
 GITHUB_USERNAME=${GITHUB_USERNAME:-naturae-syria}
 GITHUB_REPO=${GITHUB_REPO:-Accounting}
-BRANCH=${BRANCH:-docker}
+# Default to the repository's Docker branch
+BRANCH=${BRANCH:-Docker}
 REPO_URL=${REPO_URL:-"https://github.com/${GITHUB_USERNAME}/${GITHUB_REPO}.git"}
 
 # Local directory to clone the repo
