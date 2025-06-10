@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Load environment variables if a .env file is present
+if [ -f .env ]; then
+  set -a
+  # shellcheck source=/dev/null
+  . ./.env
+  set +a
+fi
+
 # Wait until the database is ready
 echo "Waiting for the database to be ready..."
 until node -e "
