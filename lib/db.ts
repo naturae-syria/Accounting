@@ -23,7 +23,7 @@ function createPool(host: string): Pool {
   })
 }
 
-export let pool = createPool(env.DB_HOST)
+export let pool = createPool(env.DB_HOST!)
 
 // التحقق من الاتصال بقاعدة البيانات
 export const testConnection = async () => {
