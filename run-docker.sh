@@ -35,6 +35,7 @@ if command -v lsof >/dev/null 2>&1; then
       sed -i.bak "s/^DB_PORT_HOST=.*/DB_PORT_HOST=${new_port}/" .env && rm -f .env.bak
     fi
     db_port_host=$new_port
+    export DB_PORT_HOST=$new_port
   fi
 fi
 
