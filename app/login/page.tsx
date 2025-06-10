@@ -18,21 +18,21 @@ export default function LoginPage() {
   const router = useRouter()
   const { toast } = useToast()
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    // التحقق من بيانات تسجيل الدخول
-    if (username === "admin" && password === "admin123") {
-      // تخزين حالة تسجيل الدخول في localStorage
-      localStorage.setItem("isLoggedIn", "true")
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    })
 
+    if (res.ok) {
       toast({
         title: "تم تسجيل الدخول بنجاح",
         description: "مرحباً بك في نظام إدارة المحاسبة والتوزيع",
       })
-
-      // الانتقال إلى الصفحة الرئيسية
       router.push("/dashboard")
     } else {
       toast({
