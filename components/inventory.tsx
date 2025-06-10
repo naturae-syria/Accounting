@@ -24,7 +24,7 @@ import {
   updateInventory,
   getProductInventoryReport,
 } from "@/lib/data-utils"
-import type { Product, ProductInventory } from "@/lib/types"
+import type { Product, ProductInventory, DistributionCenter } from "@/lib/types"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
@@ -40,7 +40,7 @@ export default function Inventory() {
   const [adjustmentReason, setAdjustmentReason] = useState("")
   const [adjustmentCenterId, setAdjustmentCenterId] = useState("")
   const [inventory, setInventory] = useState<ProductInventory[]>([])
-  const [centers, setCenters] = useState([])
+  const [centers, setCenters] = useState<DistributionCenter[]>([])
   const [selectedProductForReport, setSelectedProductForReport] = useState<Product | null>(null)
   const [productInventoryReport, setProductInventoryReport] = useState<any[]>([])
   const { toast } = useToast()
