@@ -1,4 +1,13 @@
+import test from 'node:test'
 import { strict as assert } from 'assert'
+
+// Provide sane defaults to avoid connecting as the root user
+process.env.DB_USER ||= 'postgres'
+process.env.DB_HOST ||= 'localhost'
+process.env.DB_NAME ||= 'accounting_system'
+process.env.DB_PASSWORD ||= 'postgres'
+process.env.DB_PORT ||= '5432'
+
 import { env } from '../lib/env'
 
 test('environment variables are loaded', () => {
