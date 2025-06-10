@@ -1033,7 +1033,16 @@ export const getProductsFromFile = async (): Promise<Product[]> => {
       },
     ]
 
-    const client = await pool.connect()
+    let client
+    try {
+      client = await pool.connect()
+    } catch (connectionError) {
+      console.error(
+        "خطأ في الاتصال بقاعدة البيانات أثناء استيراد المنتجات:",
+        connectionError,
+      )
+      return products.map((p, i) => ({ id: (i + 1).toString(), ...p }))
+    }
     try {
       await client.query("BEGIN")
 
