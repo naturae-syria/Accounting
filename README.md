@@ -100,7 +100,8 @@ The repository includes a `docker-compose.yml` file for running the application
 and its dependencies in containers.
 
 1. **Configure environment variables** – copy `.env.example` to `.env` and edit
-   the values for your setup.
+   the values for your setup. If port `5432` is in use on your host machine set
+   `HOST_DB_PORT` to a different free port.
 2. **Build the images**:
 
    ```bash
