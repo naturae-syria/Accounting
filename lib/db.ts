@@ -9,15 +9,21 @@ import type {
 import { env } from "./env"
 
 // إعداد الاتصال بقاعدة البيانات
-export const pool = env.DATABASE_URL
-  ? new Pool({ connectionString: env.DATABASE_URL })
-  : new Pool({
-      user: env.DB_USER,
-      host: env.DB_HOST,
-      database: env.DB_NAME,
-      password: env.DB_PASSWORD,
-      port: env.DB_PORT,
-    })
+// Allow falling back to the Docker service name if localhost is unreachable
+function createPool(host: string): Pool {
+  if (env.DATABASE_URL) {
+    return new Pool({ connectionString: env.DATABASE_URL })
+  }
+  return new Pool({
+    user: env.DB_USER,
+    host,
+    database: env.DB_NAME,
+    password: env.DB_PASSWORD,
+    port: env.DB_PORT,
+  })
+}
+
+export let pool = createPool(env.DB_HOST)
 
 // التحقق من الاتصال بقاعدة البيانات
 export const testConnection = async () => {
@@ -28,6 +34,22 @@ export const testConnection = async () => {
     return true
   } catch (error) {
     console.error("خطأ في الاتصال بقاعدة البيانات:", error)
+    // If connection refused on localhost, try the Docker default host 'db'
+    if (
+      env.DB_HOST === "localhost" &&
+      (error as any)?.code === "ECONNREFUSED"
+    ) {
+      try {
+        const altPool = createPool("db")
+        const client = await altPool.connect()
+        console.log("تم الاتصال بقاعدة البيانات بنجاح عبر المضيف 'db'")
+        client.release()
+        pool = altPool
+        return true
+      } catch (err2) {
+        console.error("فشل الاتصال بقاعدة البيانات عبر المضيف 'db':", err2)
+      }
+    }
     return false
   }
 }
