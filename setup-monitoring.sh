@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # تثبيت Prometheus
 echo "Installing Prometheus..."
 sudo apt-get update
@@ -18,13 +20,17 @@ fi
 echo "Installing Grafana..."
 sudo apt-get install -y apt-transport-https software-properties-common wget gpg
 
-# Import Grafana GPG key using a system keyring
-sudo mkdir -p /usr/share/keyrings
-wget -qO- https://packages.grafana.com/gpg.key | \
-  sudo gpg --dearmor | sudo tee /usr/share/keyrings/grafana-archive-keyring.gpg > /dev/null
+# Import Grafana GPG key using a system keyring if missing
+GRAFANA_KEYRING=/usr/share/keyrings/grafana-archive-keyring.gpg
+if [ ! -f "$GRAFANA_KEYRING" ]; then
+  echo "Adding Grafana GPG key..."
+  sudo mkdir -p /usr/share/keyrings
+  wget -qO- https://packages.grafana.com/gpg.key | \
+    sudo gpg --dearmor | sudo tee "$GRAFANA_KEYRING" > /dev/null
+fi
 
 # Add the Grafana repository and reference the keyring
-echo "deb [signed-by=/usr/share/keyrings/grafana-archive-keyring.gpg] https://packages.grafana.com/oss/deb stable main" | \
+echo "deb [signed-by=${GRAFANA_KEYRING}] https://packages.grafana.com/oss/deb stable main" | \
   sudo tee /etc/apt/sources.list.d/grafana.list
 
 sudo apt-get update
