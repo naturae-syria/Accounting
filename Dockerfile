@@ -21,7 +21,7 @@ RUN pnpm run build
 
 # إنشاء صورة الإنتاج
 FROM base AS runner
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # نسخ ملفات التعريف لتثبيت اعتماديات الإنتاج
 COPY --from=builder /app/package.json ./package.json
@@ -45,8 +45,8 @@ USER nextjs
 EXPOSE 3000
 
 # تعيين متغيرات البيئة
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 # تشغيل التطبيق
 CMD ["pnpm", "start"]
