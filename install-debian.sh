@@ -8,7 +8,10 @@ set -e
 # ---- Configuration ----
 APP_USER=${APP_USER:-accounting}
 APP_DIR=${APP_DIR:-/opt/accounting-system}
-REPO_URL=${REPO_URL:-https://github.com/naturae-syria/Accounting.git}
+GITHUB_USERNAME=${GITHUB_USERNAME:-naturae-syria}
+GITHUB_REPO=${GITHUB_REPO:-Accounting}
+BRANCH=${BRANCH:-docker}
+REPO_URL=${REPO_URL:-"https://github.com/${GITHUB_USERNAME}/${GITHUB_REPO}.git"}
 
 DB_USER=${DB_USER:-accounting}
 DB_NAME=${DB_NAME:-accounting_db}
@@ -41,12 +44,14 @@ fi
 # ---- Clone Repository ----
 if [ -d "$APP_DIR/.git" ]; then
   echo "Updating existing repository..."
-  sudo -u "$APP_USER" git -C "$APP_DIR" pull
+  sudo -u "$APP_USER" git -C "$APP_DIR" fetch origin
+  sudo -u "$APP_USER" git -C "$APP_DIR" checkout "$BRANCH"
+  sudo -u "$APP_USER" git -C "$APP_DIR" pull origin "$BRANCH"
 else
   echo "Cloning repository..."
   sudo mkdir -p "$APP_DIR"
   sudo chown "$APP_USER":"$APP_USER" "$APP_DIR"
-  sudo -u "$APP_USER" git clone "$REPO_URL" "$APP_DIR"
+  sudo -u "$APP_USER" git clone --branch "$BRANCH" "$REPO_URL" "$APP_DIR"
 fi
 
 cd "$APP_DIR"
