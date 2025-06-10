@@ -59,6 +59,8 @@ DB_HOST=localhost
 DB_NAME=accounting_system
 DB_PASSWORD=postgres
 DB_PORT=5432
+# Alternatively you can use a single connection string
+# DATABASE_URL=postgres://user:password@localhost:5432/accounting_system
 REDIS_URL=redis://localhost:6379
 ```
 
