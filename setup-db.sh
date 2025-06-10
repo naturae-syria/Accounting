@@ -14,6 +14,9 @@ if ! command -v psql &> /dev/null; then
     sudo apt-get install -y postgresql postgresql-contrib
 fi
 
+# Configure psql to use the postgres role by default
+echo "export PGUSER=postgres" | sudo tee /etc/profile.d/psql-defaults.sh >/dev/null
+
 # Create database and user
 echo "Creating database and user..."
 sudo -u postgres psql << EOF

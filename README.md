@@ -68,6 +68,15 @@ REDIS_URL=redis://localhost:6379
 pnpm run init-db
 ```
 
+**Note**: If `psql` reports `FATAL: role "root" does not exist`, use the
+`postgres` role to connect:
+
+```bash
+sudo -u postgres psql
+# or
+psql -U postgres
+```
+
 5. Start the development server:
 
 ```bash
