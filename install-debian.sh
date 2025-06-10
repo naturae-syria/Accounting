@@ -10,7 +10,7 @@ APP_USER=${APP_USER:-accounting}
 APP_DIR=${APP_DIR:-/opt/accounting-system}
 GITHUB_USERNAME=${GITHUB_USERNAME:-naturae-syria}
 GITHUB_REPO=${GITHUB_REPO:-Accounting}
-BRANCH=${BRANCH:-docker}
+BRANCH=${BRANCH:-Docker}
 REPO_URL=${REPO_URL:-"https://github.com/${GITHUB_USERNAME}/${GITHUB_REPO}.git"}
 
 DB_USER=${DB_USER:-accounting}
