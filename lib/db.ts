@@ -7,6 +7,7 @@ import type {
   CustomReport,
 } from "./types"
 import { env } from "./env"
+import { hashPassword } from "./auth"
 
 // إعداد الاتصال بقاعدة البيانات
 export const pool = new Pool({
@@ -117,6 +118,16 @@ export const initializeDatabase = async () => {
         filters JSONB,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
+    // إنشاء جدول المستخدمين لتخزين بيانات تسجيل الدخول
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(50) UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `)
 
@@ -231,6 +242,17 @@ export const seedDatabase = async () => {
         )
       }
       console.log("تم إضافة مبيعات تجريبية")
+    }
+
+    // إضافة مستخدم المدير إذا لم يكن موجودًا
+    const usersResult = await client.query('SELECT COUNT(*) FROM users')
+    if (Number.parseInt(usersResult.rows[0].count) === 0) {
+      const hash = await hashPassword(env.ADMIN_PASS)
+      await client.query(
+        `INSERT INTO users (username, password_hash) VALUES ($1, $2)`,
+        [env.ADMIN_USER, hash],
+      )
+      console.log('تم إنشاء مستخدم المدير')
     }
   } catch (error) {
     console.error("خطأ في إضافة البيانات التجريبية:", error)
@@ -1145,5 +1167,56 @@ export const deleteCustomReport = async (id: string): Promise<boolean> => {
   } catch (error) {
     console.error("خطأ في حذف التقرير المخصص:", error)
     throw error
+  }
+}
+
+export interface User {
+  id: string
+  username: string
+  passwordHash: string
+}
+
+export const getUserByUsername = async (
+  username: string,
+): Promise<User | null> => {
+  try {
+    const result = await pool.query(
+      `SELECT id, username, password_hash FROM users WHERE username = $1`,
+      [username],
+    )
+    if (result.rows.length === 0) return null
+    const row = result.rows[0]
+    return {
+      id: row.id.toString(),
+      username: row.username,
+      passwordHash: row.password_hash,
+    }
+  } catch (error) {
+    console.error("خطأ في جلب المستخدم:", error)
+    throw error
+  }
+}
+
+export const createUser = async (
+  username: string,
+  password: string,
+): Promise<User> => {
+  const client = await pool.connect()
+  try {
+    await client.query("BEGIN")
+    const hash = await hashPassword(password)
+    const result = await client.query(
+      `INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING id`,
+      [username, hash],
+    )
+    await client.query("COMMIT")
+    const id = result.rows[0].id.toString()
+    return { id, username, passwordHash: hash }
+  } catch (error) {
+    await client.query("ROLLBACK")
+    console.error("خطأ في إنشاء المستخدم:", error)
+    throw error
+  } finally {
+    client.release()
   }
 }

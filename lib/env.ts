@@ -7,8 +7,9 @@ const envSchema = z.object({
   DB_PASSWORD: z.string(),
   DB_PORT: z.preprocess((v) => Number(v), z.number().int()),
   REDIS_URL: z.string().url().optional(),
-  ADMIN_USER: z.string().default('admin'),
-  ADMIN_PASS: z.string().default('admin123'),
+  // Provide secure credentials for the built-in admin user
+  ADMIN_USER: z.string().default('your_admin_user'),
+  ADMIN_PASS: z.string().default('your_admin_password'),
 })
 
 export const env = envSchema.parse(process.env)

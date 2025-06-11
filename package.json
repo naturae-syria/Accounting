@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "ts-node server.ts",
     "lint": "next lint",
     "init-db": "ts-node -P tsconfig.init.json ./lib/db.ts && echo 'Database ready'",
     "test": "node --test",
@@ -40,10 +40,13 @@
     "@radix-ui/react-toggle": "1.1.1",
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
+    "@types/bcrypt": "^5.0.2",
     "autoprefixer": "^10.4.20",
+    "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
+    "cookie": "^0.5.0",
     "date-fns": "^2.30.0",
     "embla-carousel-react": "8.5.1",
     "input-otp": "1.4.1",
@@ -64,21 +67,19 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
-    "cookie": "^0.5.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/cookie": "0.5.2",
     "@types/node": "22.15.30",
+    "@types/pg": "8.15.4",
     "@types/react": "18.3.23",
     "@types/react-dom": "18.3.7",
-    "@types/pg": "8.15.4",
-    "@types/cookie": "0.5.2",
+    "eslint": "^9.28.0",
+    "eslint-config-next": "^15.3.3",
     "postcss": "8.5.4",
     "tailwindcss": "3.4.17",
-    "typescript": "5.8.3",
     "ts-node": "10.9.2",
-    "eslint": "^9.28.0",
-    "eslint-config-next": "^15.3.3"
+    "typescript": "5.8.3"
   }
 }
-
