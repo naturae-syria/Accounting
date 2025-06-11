@@ -17,23 +17,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { toast } = useToast()
 
   useEffect(() => {
-    // التحقق من حالة تسجيل الدخول
-    const checkAuth = () => {
-      const hasSession = document.cookie.includes('session=auth')
-      if (!hasSession) {
-        router.push('/login')
-        return
-      }
-      setMounted(true)
-    }
-
-    // تأخير قصير للتأكد من أن الكود يعمل على جانب العميل
-    const timer = setTimeout(() => {
-      checkAuth()
-    }, 100)
-
+    // allow client side rendering after mount
+    const timer = setTimeout(() => setMounted(true), 100)
     return () => clearTimeout(timer)
-  }, [router])
+  }, [])
 
   const handleLogout = () => {
     fetch('/api/auth/logout', { method: 'POST' }).finally(() => {
