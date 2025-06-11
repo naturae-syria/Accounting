@@ -15,6 +15,13 @@ export default function AuthCheck({ children }: AuthCheckProps) {
   useEffect(() => {
     const checkSession = async () => {
       try {
+        const cookies = document.cookie.split('; ').map(c => c.trim())
+        const hasSession = cookies.some(c => c.startsWith('session='))
+        if (!hasSession) {
+          router.push('/login')
+          return
+        }
+
         const res = await fetch('/api/auth/check')
         const { valid } = await res.json()
         if (!valid) {
