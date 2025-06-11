@@ -6,7 +6,7 @@ import {
   addDistributionCenter,
   updateDistributionCenter,
   deleteDistributionCenter,
-} from "@/lib/db"
+} from "@/lib/db-cache"
 
 export async function GET() {
   try {
