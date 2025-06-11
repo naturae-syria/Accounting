@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getProductById } from "@/lib/db"
-import { updateProduct, deleteProduct } from "@/lib/db-cache"
+import { updateProduct, deleteProduct, getProductById } from "@/lib/db-cache"
 
 export async function GET(request: NextRequest, { params }: any) {
   try {
