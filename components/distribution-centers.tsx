@@ -17,12 +17,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Pencil, Trash2, Plus, Eye, Search } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import {
-  getDistributionCenters,
-  saveDistributionCenters,
-  getSales,
-  getProducts,
-  getCenterInventoryReport,
-} from "@/lib/data-utils"
+  fetchDistributionCenters,
+  addDistributionCenterApi,
+  updateDistributionCenterApi,
+  deleteDistributionCenterApi,
+  fetchSales,
+  fetchProducts,
+  fetchCenterInventoryReport,
+} from "@/lib/api-utils"
 import type { DistributionCenter } from "@/lib/types"
 
 export default function DistributionCenters() {
@@ -50,10 +52,9 @@ export default function DistributionCenters() {
   })
   const { toast } = useToast()
 
-  const loadCenters = useCallback(() => {
+  const loadCenters = useCallback(async () => {
     try {
-      const centersData = getDistributionCenters()
-      console.log("Loaded centers:", centersData)
+      const centersData = await fetchDistributionCenters()
       setCenters(centersData)
     } catch (error) {
       console.error("Error loading centers:", error)
@@ -70,7 +71,7 @@ export default function DistributionCenters() {
   }, [loadCenters])
 
 
-  const handleAddCenter = () => {
+  const handleAddCenter = async () => {
     try {
       if (!currentCenter.name) {
         toast({
@@ -81,23 +82,13 @@ export default function DistributionCenters() {
         return
       }
 
-      const newCenter: DistributionCenter = {
+      const newCenter = {
         ...currentCenter,
-        id: Date.now().toString(),
         commissionRate: currentCenter.commissionRate || 10,
       }
 
-      console.log("Adding new center:", newCenter)
-
-      // تحميل المراكز الحالية مرة أخرى للتأكد من أحدث البيانات
-      const currentCenters = getDistributionCenters()
-      const updatedCenters = [...currentCenters, newCenter]
-
-      // حفظ المراكز المحدثة
-      saveDistributionCenters(updatedCenters)
-
-      // تحديث حالة المراكز في المكون
-      setCenters(updatedCenters)
+      await addDistributionCenterApi(newCenter)
+      await loadCenters()
       setIsAddDialogOpen(false)
       resetCurrentCenter()
 
@@ -115,7 +106,7 @@ export default function DistributionCenters() {
     }
   }
 
-  const handleEditCenter = () => {
+  const handleEditCenter = async () => {
     try {
       if (!currentCenter.name) {
         toast({
@@ -126,15 +117,8 @@ export default function DistributionCenters() {
         return
       }
 
-      // تحميل المراكز الحالية مرة أخرى للتأكد من أحدث البيانات
-      const currentCenters = getDistributionCenters()
-      const updatedCenters = currentCenters.map((center) => (center.id === currentCenter.id ? currentCenter : center))
-
-      // حفظ المراكز المحدثة
-      saveDistributionCenters(updatedCenters)
-
-      // تحديث حالة المراكز في المكون
-      setCenters(updatedCenters)
+      await updateDistributionCenterApi(currentCenter.id, currentCenter)
+      await loadCenters()
       setIsEditDialogOpen(false)
 
       toast({
@@ -151,19 +135,12 @@ export default function DistributionCenters() {
     }
   }
 
-  const handleDeleteCenter = (id: string) => {
+  const handleDeleteCenter = async (id: string) => {
     try {
       const centerToDelete = centers.find((center) => center.id === id)
 
-      // تحميل المراكز الحالية مرة أخرى للتأكد من أحدث البيانات
-      const currentCenters = getDistributionCenters()
-      const updatedCenters = currentCenters.filter((center) => center.id !== id)
-
-      // حفظ المراكز المحدثة
-      saveDistributionCenters(updatedCenters)
-
-      // تحديث حالة المراكز في المكون
-      setCenters(updatedCenters)
+      await deleteDistributionCenterApi(id)
+      await loadCenters()
 
       toast({
         title: "تم الحذف بنجاح",
@@ -197,13 +174,13 @@ export default function DistributionCenters() {
     setIsEditDialogOpen(true)
   }
 
-  const openDetailsDialog = (center: DistributionCenter) => {
+  const openDetailsDialog = async (center: DistributionCenter) => {
     try {
       setCurrentCenter({ ...center })
 
       // الحصول على بيانات المبيعات لهذا المركز
-      const sales = getSales().filter((sale) => sale.centerId === center.id)
-      const products = getProducts()
+      const sales = (await fetchSales()).filter((sale) => sale.centerId === center.id)
+      const products = await fetchProducts()
 
       // حساب الإحصائيات
       let totalRevenue = 0
@@ -231,7 +208,7 @@ export default function DistributionCenters() {
       })
 
       // الحصول على بيانات المخزون لهذا المركز
-      const inventoryReport = getCenterInventoryReport(center.id)
+      const inventoryReport = await fetchCenterInventoryReport(center.id)
       setCenterInventory(inventoryReport)
 
       setIsDetailsDialogOpen(true)
