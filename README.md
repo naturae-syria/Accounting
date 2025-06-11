@@ -165,6 +165,16 @@ service state along with the URLs for accessing the application.
   NexAccount Update
   ```
 
+- **Database update**
+
+  ```bash
+  NexAccount DbUpdate
+  ```
+
+  Use this command to verify the database schema and rebuild static files.
+  It may fetch missing files from Git and requires root or `sudo` privileges
+  because system services are restarted.
+
 - **Delete** the PM2 process
 
   ```bash
@@ -182,6 +192,16 @@ service state along with the URLs for accessing the application.
   ```bash
   NexAccount help
   ```
+
+### Database update steps
+
+`NexAccount DbUpdate` performs the following actions:
+
+1. Runs `pnpm run init-db` to confirm the database schema matches the expected structure.
+2. Verifies that `lib/db.ts`, `next.config.mjs` and `docker-compose.yml` exist.
+3. Generates static pages using `pnpm build`.
+4. If differences are detected, fetches the above files from Git and reinstalls dependencies.
+5. Restarts the PM2 process along with PostgreSQL, Redis and Nginx services.
 
 ### Accessing the application
 
