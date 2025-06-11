@@ -1,7 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
 
 export const dynamic = "force-dynamic"
-import { getProducts, addProduct, updateProduct, deleteProduct } from "@/lib/db"
+import {
+  getProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+} from "@/lib/db-cache"
 
 export async function GET() {
   try {
