@@ -17,12 +17,13 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch(`${basePath}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),

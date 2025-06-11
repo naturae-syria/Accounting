@@ -86,6 +86,7 @@ pnpm start
 ```
 By default the server listens on port 3000. Open `http://localhost:3000` in your browser (or replace `localhost` with your server's IP or domain).
 If you define the `NEXT_BASE_PATH` environment variable when building, append that path to the URL (e.g. `http://localhost:3000$NEXT_BASE_PATH`).
+When a base path is used, set `NEXT_PUBLIC_BASE_PATH` to the same value so client-side API calls can resolve correctly.
 
 ## Development
 
