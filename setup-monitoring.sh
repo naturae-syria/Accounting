@@ -14,6 +14,8 @@ if [ "$AVAILABLE_SPACE_MB" -lt 700 ]; then
   echo "Low disk space ($AVAILABLE_SPACE_MB MB available). Cleaning apt cache..."
   sudo apt-get clean
   sudo rm -rf /var/lib/apt/lists/*
+  # Recreate apt lists to avoid "package has no installation candidate" errors
+  sudo apt-get update
 fi
 
 # تثبيت Grafana
