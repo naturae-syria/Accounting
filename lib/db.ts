@@ -1228,3 +1228,19 @@ export const createUser = async (
     client.release()
   }
 }
+
+if (require.main === module) {
+  (async () => {
+    try {
+      await testConnection()
+      await initializeDatabase()
+      await seedDatabase()
+      console.log('Database ready')
+    } catch (err) {
+      console.error('Database initialization failed:', err)
+      process.exit(1)
+    } finally {
+      await pool.end()
+    }
+  })()
+}
