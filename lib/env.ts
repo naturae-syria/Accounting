@@ -1,4 +1,8 @@
 import { z } from 'zod'
+import { config } from 'dotenv'
+
+// Load environment variables from .env if present
+config()
 
 const envSchema = z.object({
   DB_USER: z.string(),
