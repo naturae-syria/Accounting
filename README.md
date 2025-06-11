@@ -247,4 +247,6 @@ sudo apt-get update
 ```
 
 Grafana is configured to listen on port **4000**, so visit `http://<your-server-ip>:4000` after the setup completes.
+If Nginx is configured, you can alternatively access Grafana via `http://<your-domain>/grafana`.
+
 
