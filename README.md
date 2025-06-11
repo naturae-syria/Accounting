@@ -60,13 +60,12 @@ DB_NAME=accounting_system
 DB_PASSWORD=postgres
 DB_PORT=5432
 REDIS_URL=redis://localhost:6379
-ADMIN_USER=your_admin_user      # set a secure username
-ADMIN_PASS=your_admin_password  # set a strong password
+ADMIN_USER=admin      # default admin username
+ADMIN_PASS=admin123   # default admin password
 ```
 
-Avoid using trivial credentials such as `ADMIN_USER=admin` and
-`ADMIN_PASS=admin123`. Always choose unique values when setting up your
-environment.
+These credentials will be hashed when the database is initialized. Update them
+as needed for production environments.
 
 4. Initialize the database:
 
