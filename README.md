@@ -122,7 +122,7 @@ The dashboard includes a **Custom Reports** tab where you can define your own re
 
 ## Authentication
 
-Authentication uses a simple session cookie. A successful POST to `/api/auth/login` sets a `session` cookie with the `httpOnly`, `secure` and `sameSite=lax` flags enabled. The cookie expires after seven days. Logging out via `/api/auth/logout` clears this cookie using the same options.
+Authentication uses a simple session cookie. A successful POST to `/api/auth/login` sets a `session` cookie with the `httpOnly`, `secure` and `sameSite=lax` flags enabled. The cookie expires after seven days. Logging out via `/api/auth/logout` clears this cookie using the same options. A GET request to `/api/auth/check` returns `{ valid: true }` when the session cookie is present and valid.
 
 ## Managing the application
 

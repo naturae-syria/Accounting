@@ -13,13 +13,19 @@ export default function AuthCheck({ children }: AuthCheckProps) {
   const router = useRouter()
 
   useEffect(() => {
-    // التحقق من حالة تسجيل الدخول
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true"
-
-    if (!isLoggedIn) {
-      // إذا لم يكن المستخدم مسجل الدخول، انتقل إلى صفحة تسجيل الدخول
-      router.push("/login")
+    const checkSession = async () => {
+      try {
+        const res = await fetch('/api/auth/check')
+        const { valid } = await res.json()
+        if (!valid) {
+          router.push('/login')
+        }
+      } catch {
+        router.push('/login')
+      }
     }
+
+    checkSession()
   }, [router])
 
   return <>{children}</>

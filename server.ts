@@ -65,6 +65,11 @@ nextApp.prepare().then(() => {
     res.end()
   })
 
+  app.get('/api/auth/check', (req, res) => {
+    const valid = req.cookies.session === 'auth'
+    res.json({ valid })
+  })
+
   app.all('*', (req, res) => handle(req, res))
 
   const port = Number(process.env.PORT || 3000)
