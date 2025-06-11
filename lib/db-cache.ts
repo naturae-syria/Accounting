@@ -24,6 +24,24 @@ export const getProducts = async (): Promise<Product[]> => {
   }
 }
 
+export const getProductById = async (id: string): Promise<Product | null> => {
+  try {
+    const cachedData = await getCache(`product:${id}`)
+    if (cachedData) {
+      return JSON.parse(cachedData)
+    }
+
+    const product = await db.getProductById(id)
+    if (product) {
+      await setCache(`product:${id}`, JSON.stringify(product), 300)
+    }
+    return product
+  } catch (error) {
+    console.error("خطأ في الحصول على المنتج:", error)
+    throw error
+  }
+}
+
 // تعديل دوال التعديل لإلغاء صلاحية التخزين المؤقت
 export const addProduct = async (product: Omit<Product, "id">): Promise<Product> => {
   try {
@@ -40,6 +58,7 @@ export const updateProduct = async (id: string, product: Partial<Product>): Prom
   try {
     const updated = await db.updateProduct(id, product)
     await invalidateCache("products")
+    await invalidateCache(`product:${id}`)
     return updated
   } catch (error) {
     console.error("خطأ في تحديث المنتج:", error)
@@ -51,6 +70,7 @@ export const deleteProduct = async (id: string): Promise<boolean> => {
   try {
     const success = await db.deleteProduct(id)
     await invalidateCache("products")
+    await invalidateCache(`product:${id}`)
     return success
   } catch (error) {
     console.error("خطأ في حذف المنتج:", error)
@@ -70,6 +90,26 @@ export const getDistributionCenters = async (): Promise<DistributionCenter[]> =>
     return centers
   } catch (error) {
     console.error("خطأ في الحصول على مراكز التوزيع:", error)
+    throw error
+  }
+}
+
+export const getDistributionCenterById = async (
+  id: string,
+): Promise<DistributionCenter | null> => {
+  try {
+    const cachedData = await getCache(`center:${id}`)
+    if (cachedData) {
+      return JSON.parse(cachedData)
+    }
+
+    const center = await db.getDistributionCenterById(id)
+    if (center) {
+      await setCache(`center:${id}`, JSON.stringify(center), 300)
+    }
+    return center
+  } catch (error) {
+    console.error("خطأ في الحصول على مركز التوزيع:", error)
     throw error
   }
 }
@@ -94,6 +134,7 @@ export const updateDistributionCenter = async (
   try {
     const updated = await db.updateDistributionCenter(id, center)
     await invalidateCache("centers")
+    await invalidateCache(`center:${id}`)
     return updated
   } catch (error) {
     console.error("خطأ في تحديث مركز التوزيع:", error)
@@ -105,6 +146,7 @@ export const deleteDistributionCenter = async (id: string): Promise<boolean> => 
   try {
     const success = await db.deleteDistributionCenter(id)
     await invalidateCache("centers")
+    await invalidateCache(`center:${id}`)
     return success
   } catch (error) {
     console.error("خطأ في حذف مركز التوزيع:", error)

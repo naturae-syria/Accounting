@@ -1,6 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getDistributionCenterById } from "@/lib/db"
-import { updateDistributionCenter, deleteDistributionCenter } from "@/lib/db-cache"
+import {
+  updateDistributionCenter,
+  deleteDistributionCenter,
+  getDistributionCenterById,
+} from "@/lib/db-cache"
 
 export async function GET(request: NextRequest, { params }: any) {
   try {
