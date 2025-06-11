@@ -15,6 +15,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [mounted, setMounted] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
 
   useEffect(() => {
     // التحقق من حالة تسجيل الدخول
@@ -36,7 +37,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [router])
 
   const handleLogout = () => {
-    fetch('/api/auth/logout', { method: 'POST' }).finally(() => {
+    fetch(`${basePath}/api/auth/logout`, { method: 'POST' }).finally(() => {
       router.push('/login')
     })
     toast({
