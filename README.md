@@ -113,6 +113,10 @@ docker-compose down
 
 The dashboard includes a **Custom Reports** tab where you can define your own reports. Choose a report type, enter a name and comma separated columns, then add the report. Reports can be removed from the same tab. They are stored in the database via `/api/custom-reports`.
 
+## Authentication
+
+Authentication uses a simple session cookie. A successful POST to `/api/auth/login` sets a `session` cookie with the `httpOnly`, `secure` and `sameSite=lax` flags enabled. The cookie expires after seven days. Logging out via `/api/auth/logout` clears this cookie using the same options.
+
 ## Managing the application
 
 For production deployments the application can be managed using **PM2**. After running `setup-pm2.sh` an `ecosystem.config.js` file is generated and the app is registered with the name `accounting-system`.

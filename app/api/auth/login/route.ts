@@ -7,7 +7,16 @@ export async function POST(request: Request) {
 
   if (username === env.ADMIN_USER && password === env.ADMIN_PASS) {
     const headers = new Headers()
-    headers.append('Set-Cookie', serialize('session', 'auth', { httpOnly: true, path: '/' }))
+    headers.append(
+      'Set-Cookie',
+      serialize('session', 'auth', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7,
+        path: '/',
+      })
+    )
     return new NextResponse(JSON.stringify({ success: true }), { headers })
   }
 
