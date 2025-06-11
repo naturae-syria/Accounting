@@ -219,6 +219,9 @@ case "$COMMAND" in
       pnpm install || true
     fi
 
+    echo "Applying database migrations..."
+    pnpm migrate-db || true
+
     echo "Restarting services..."
     pm2 restart "$APP_NAME"
     systemctl restart postgresql redis-server nginx || true
