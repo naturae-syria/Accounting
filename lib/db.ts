@@ -37,6 +37,14 @@ export const initializeDatabase = async () => {
   try {
     await client.query("BEGIN")
 
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS schema_migrations (
+        id SERIAL PRIMARY KEY,
+        filename VARCHAR(255) UNIQUE NOT NULL,
+        applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
     // إنشاء جدول المنتجات
     await client.query(`
       CREATE TABLE IF NOT EXISTS products (
