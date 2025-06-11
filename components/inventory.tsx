@@ -396,10 +396,10 @@ export default function Inventory() {
 
             <Tabs defaultValue="products" className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-background-light">
-                <TabsTrigger value="products" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+                <TabsTrigger value="products" className="data-[state=active]:bg-primary data-[state=active]:text-orange-500">
                   تقرير حسب المنتجات
                 </TabsTrigger>
-                <TabsTrigger value="centers" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+                <TabsTrigger value="centers" className="data-[state=active]:bg-primary data-[state=active]:text-orange-500">
                   تقرير حسب مراكز التوزيع
                 </TabsTrigger>
               </TabsList>

@@ -26,22 +26,22 @@ export default function DashboardPage() {
   return (
     <Tabs defaultValue="dashboard" className="w-full">
       <TabsList className="grid w-full grid-cols-6 bg-background-light">
-        <TabsTrigger value="dashboard" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+        <TabsTrigger value="dashboard" className="data-[state=active]:bg-primary data-[state=active]:text-orange-500">
           لوحة التحكم
         </TabsTrigger>
-        <TabsTrigger value="products" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+        <TabsTrigger value="products" className="data-[state=active]:bg-primary data-[state=active]:text-orange-500">
           المنتجات
         </TabsTrigger>
-        <TabsTrigger value="centers" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+        <TabsTrigger value="centers" className="data-[state=active]:bg-primary data-[state=active]:text-orange-500">
           مراكز التوزيع
         </TabsTrigger>
-        <TabsTrigger value="sales" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+        <TabsTrigger value="sales" className="data-[state=active]:bg-primary data-[state=active]:text-orange-500">
           المبيعات
         </TabsTrigger>
-        <TabsTrigger value="inventory" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+        <TabsTrigger value="inventory" className="data-[state=active]:bg-primary data-[state=active]:text-orange-500">
           الجرد
         </TabsTrigger>
-        <TabsTrigger value="customReports" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+        <TabsTrigger value="customReports" className="data-[state=active]:bg-primary data-[state=active]:text-orange-500">
           التقارير المخصصة
         </TabsTrigger>
       </TabsList>
