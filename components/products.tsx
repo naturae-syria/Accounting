@@ -16,7 +16,13 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Pencil, Trash2, Plus, Search } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
-import { getProducts, saveProducts, getProductsFromFile } from "@/lib/data-utils"
+import {
+  fetchProducts,
+  addProductApi,
+  updateProductApi,
+  deleteProductApi,
+  importProductsApi,
+} from "@/lib/api-utils"
 import type { Product } from "@/lib/types"
 
 export default function Products() {
@@ -37,10 +43,9 @@ export default function Products() {
   })
   const { toast } = useToast()
 
-  const loadProducts = useCallback(() => {
+  const loadProducts = useCallback(async () => {
     try {
-      const productsData = getProducts()
-      console.log("Loaded products:", productsData)
+      const productsData = await fetchProducts()
       setProducts(productsData)
     } catch (error) {
       console.error("Error loading products:", error)
@@ -56,7 +61,7 @@ export default function Products() {
     loadProducts()
   }, [loadProducts])
 
-  const handleAddProduct = () => {
+  const handleAddProduct = async () => {
     try {
       if (!currentProduct.name) {
         toast({
@@ -71,25 +76,14 @@ export default function Products() {
       const priceInSYP = currentProduct.price || 0
       const costInSYP = currentProduct.cost || priceInSYP * 0.7
 
-      const newProduct: Product = {
+      const newProduct = {
         ...currentProduct,
-        id: Date.now().toString(),
         price: priceInSYP,
         cost: costInSYP,
         stock: currentProduct.stock || 0,
       }
-
-      console.log("Adding new product:", newProduct)
-
-      // تحميل المنتجات الحالية مرة أخرى للتأكد من أحدث البيانات
-      const currentProducts = getProducts()
-      const updatedProducts = [...currentProducts, newProduct]
-
-      // حفظ المنتجات المحدثة
-      saveProducts(updatedProducts)
-
-      // تحديث حالة المنتجات في المكون
-      setProducts(updatedProducts)
+      await addProductApi(newProduct)
+      await loadProducts()
       setIsAddDialogOpen(false)
       resetCurrentProduct()
 
@@ -107,7 +101,7 @@ export default function Products() {
     }
   }
 
-  const handleEditProduct = () => {
+  const handleEditProduct = async () => {
     try {
       if (!currentProduct.name) {
         toast({
@@ -119,16 +113,8 @@ export default function Products() {
       }
 
       // تحميل المنتجات الحالية مرة أخرى للتأكد من أحدث البيانات
-      const currentProducts = getProducts()
-      const updatedProducts = currentProducts.map((product) =>
-        product.id === currentProduct.id ? currentProduct : product,
-      )
-
-      // حفظ المنتجات المحدثة
-      saveProducts(updatedProducts)
-
-      // تحديث حالة المنتجات في المكون
-      setProducts(updatedProducts)
+      await updateProductApi(currentProduct.id, currentProduct)
+      await loadProducts()
       setIsEditDialogOpen(false)
 
       toast({
@@ -145,19 +131,12 @@ export default function Products() {
     }
   }
 
-  const handleDeleteProduct = (id: string) => {
+  const handleDeleteProduct = async (id: string) => {
     try {
       const productToDelete = products.find((product) => product.id === id)
 
-      // تحميل المنتجات الحالية مرة أخرى للتأكد من أحدث البيانات
-      const currentProducts = getProducts()
-      const updatedProducts = currentProducts.filter((product) => product.id !== id)
-
-      // حفظ المنتجات المحدثة
-      saveProducts(updatedProducts)
-
-      // تحديث حالة المنتجات في المكون
-      setProducts(updatedProducts)
+      await deleteProductApi(id)
+      await loadProducts()
 
       toast({
         title: "تم الحذف بنجاح",
@@ -193,11 +172,10 @@ export default function Products() {
     setIsEditDialogOpen(true)
   }
 
-  const handleImportProducts = () => {
+  const handleImportProducts = async () => {
     try {
-      const importedProducts = getProductsFromFile()
+      const importedProducts = await importProductsApi()
       if (importedProducts && importedProducts.length > 0) {
-        saveProducts(importedProducts)
         setProducts(importedProducts)
 
         toast({

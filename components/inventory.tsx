@@ -17,13 +17,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Plus, Minus, FileText, Search } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import {
-  getProducts,
-  saveProducts,
-  getDistributionCenters,
-  getInventory,
-  updateInventory,
-  getProductInventoryReport,
-} from "@/lib/data-utils"
+  fetchProducts,
+  fetchDistributionCenters,
+  fetchInventory,
+  updateInventoryApi,
+  fetchProductInventoryReport,
+} from "@/lib/api-utils"
 import type { Product, ProductInventory, DistributionCenter } from "@/lib/types"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -45,11 +44,11 @@ export default function Inventory() {
   const [productInventoryReport, setProductInventoryReport] = useState<any[]>([])
   const { toast } = useToast()
 
-  const loadData = useCallback(() => {
+  const loadData = useCallback(async () => {
     try {
-      const productsData = getProducts()
-      const centersData = getDistributionCenters()
-      const inventoryData = getInventory()
+      const productsData = await fetchProducts()
+      const centersData = await fetchDistributionCenters()
+      const inventoryData = await fetchInventory()
 
       setProducts(productsData)
       setCenters(centersData)
@@ -68,12 +67,18 @@ export default function Inventory() {
     loadData()
   }, [loadData])
 
-  const handleAdjustInventory = () => {
+  const handleAdjustInventory = async () => {
     if (!currentProduct || !adjustmentCenterId) return
 
     try {
       // تحديث المخزون في مركز التوزيع المحدد
-      updateInventory(currentProduct.id, adjustmentCenterId, adjustmentQuantity, adjustmentType === "add")
+      await updateInventoryApi(
+        currentProduct.id,
+        adjustmentCenterId,
+        adjustmentQuantity,
+        adjustmentType === "add",
+        adjustmentReason,
+      )
 
       // تحديث المخزون الإجمالي للمنتج
       const finalQuantity =
@@ -88,18 +93,7 @@ export default function Inventory() {
         return
       }
 
-      const updatedProduct = {
-        ...currentProduct,
-        stock: finalQuantity,
-      }
-
-      const updatedProducts = products.map((product) => (product.id === currentProduct.id ? updatedProduct : product))
-
-      saveProducts(updatedProducts)
-      setProducts(updatedProducts)
-
-      // إعادة تحميل البيانات
-      loadData()
+      await loadData()
 
       setIsAdjustDialogOpen(false)
 
@@ -130,10 +124,10 @@ export default function Inventory() {
     setIsReportDialogOpen(true)
   }
 
-  const openProductReport = (product: Product) => {
+  const openProductReport = async (product: Product) => {
     try {
       setSelectedProductForReport(product)
-      const report = getProductInventoryReport(product.id)
+      const report = await fetchProductInventoryReport(product.id)
       setProductInventoryReport(report)
       setIsProductReportDialogOpen(true)
     } catch (error) {

@@ -18,15 +18,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Trash2, Plus, FileText, Search } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import {
-  getProducts,
-  getDistributionCenters,
-  getSales,
-  saveSales,
-  updateProductStock,
-  updateInventory,
-  getSalesByCenterReport,
-  getInventory,
-} from "@/lib/data-utils"
+  fetchProducts,
+  fetchDistributionCenters,
+  fetchSales,
+  addSaleApi,
+  deleteSaleApi,
+  fetchInventory,
+  fetchCenterSalesReport,
+} from "@/lib/api-utils"
 import type { Product, DistributionCenter, Sale } from "@/lib/types"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
@@ -59,11 +58,11 @@ export default function Sales() {
   })
   const { toast } = useToast()
 
-  const loadData = useCallback(() => {
+  const loadData = useCallback(async () => {
     try {
-      const productsData = getProducts()
-      const centersData = getDistributionCenters()
-      const salesData = getSales()
+      const productsData = await fetchProducts()
+      const centersData = await fetchDistributionCenters()
+      const salesData = await fetchSales()
 
       setProducts(productsData)
       setCenters(centersData)
@@ -82,7 +81,7 @@ export default function Sales() {
     loadData()
   }, [loadData])
 
-  const handleAddSale = () => {
+  const handleAddSale = async () => {
     try {
       // التحقق من صحة البيانات
       if (!currentSale.productId || !currentSale.centerId || currentSale.quantity <= 0) {
@@ -95,7 +94,7 @@ export default function Sales() {
       }
 
       // التحقق من توفر المخزون في مركز التوزيع
-      const inventory = getInventory()
+      const inventory = await fetchInventory()
       const inventoryItem = inventory.find(
         (item) => item.productId === currentSale.productId && item.centerId === currentSale.centerId,
       )
@@ -110,25 +109,12 @@ export default function Sales() {
       }
 
       // إنشاء عملية البيع الجديدة
-      const newSale: Sale = {
+      const newSale = {
         ...currentSale,
-        id: Date.now().toString(),
         date: new Date().toISOString(),
       }
-
-      // تحديث المبيعات
-      const updatedSales = [...sales, newSale]
-      saveSales(updatedSales)
-      setSales(updatedSales)
-
-      // تحديث المخزون في مركز التوزيع
-      updateInventory(currentSale.productId, currentSale.centerId, currentSale.quantity, false)
-
-      // تحديث المخزون الإجمالي للمنتج
-      updateProductStock(currentSale.productId, currentSale.quantity)
-
-      // إعادة تحميل البيانات
-      loadData()
+      await addSaleApi(newSale)
+      await loadData()
 
       setIsAddDialogOpen(false)
       resetCurrentSale()
@@ -147,32 +133,13 @@ export default function Sales() {
     }
   }
 
-  const handleDeleteSale = (id: string) => {
+  const handleDeleteSale = async (id: string) => {
     try {
       const saleToDelete = sales.find((sale) => sale.id === id)
       if (!saleToDelete) return
 
-      // تحديث المبيعات
-      const updatedSales = sales.filter((sale) => sale.id !== id)
-      saveSales(updatedSales)
-      setSales(updatedSales)
-
-      // إعادة الكمية إلى المخزون في مركز التوزيع
-      updateInventory(saleToDelete.productId, saleToDelete.centerId, saleToDelete.quantity, true)
-
-      // إعادة الكمية إلى المخزون الإجمالي للمنتج
-      const product = products.find((p) => p.id === saleToDelete.productId)
-      if (product) {
-        const updatedProduct = {
-          ...product,
-          stock: product.stock + saleToDelete.quantity,
-        }
-        const updatedProducts = products.map((p) => (p.id === product.id ? updatedProduct : p))
-        setProducts(updatedProducts)
-      }
-
-      // إعادة تحميل البيانات
-      loadData()
+      await deleteSaleApi(id)
+      await loadData()
 
       toast({
         title: "تم الحذف بنجاح",
@@ -317,10 +284,10 @@ export default function Sales() {
     }
   }
 
-  const generateCenterSalesReport = (centerId: string) => {
+  const generateCenterSalesReport = async (centerId: string) => {
     try {
       setSelectedCenterForReport(centerId)
-      const report = getSalesByCenterReport(centerId, startDate, endDate)
+      const report = await fetchCenterSalesReport(centerId, startDate, endDate)
       setCenterSalesReport(report)
     } catch (error) {
       console.error("Error generating center sales report:", error)
