@@ -17,6 +17,8 @@ services:
       - DB_NAME=accounting_system
       - DB_PASSWORD=postgres_password
       - DB_PORT=5432
+      - ADMIN_USER=admin
+      - ADMIN_PASS=admin123
       # إذا كنت تريد استخدام Redis، قم بإلغاء التعليق على السطر التالي
       # - REDIS_URL=redis://redis:6379
     networks:
