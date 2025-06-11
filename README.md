@@ -182,6 +182,14 @@ service state along with the URLs for accessing the application.
   It may fetch missing files from Git and requires root or `sudo` privileges
   because system services are restarted.
 
+- **Update the web server configuration**
+
+  ```bash
+  NexAccount Webserver
+  ```
+
+  Ensures Nginx is installed, configured and restarted.
+
 - **Delete** the PM2 process
 
   ```bash
