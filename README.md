@@ -231,7 +231,7 @@ Logs for the major components can be found in the following locations:
 
 ### Firewall
 
-`setup-firewall.sh` configures UFW to open ports 22, 80, 443, 3000, 5432, 6379, 9090 and 9100 so the project operates correctly.
+`setup-firewall.sh` configures UFW to open ports 22, 80, 443, 3000, 4000, 5432, 6379, 9090 and 9100 so the project operates correctly.
 
 ### Monitoring setup
 
@@ -245,4 +245,6 @@ echo "deb [signed-by=/usr/share/keyrings/grafana-archive-keyring.gpg] https://pa
   sudo tee /etc/apt/sources.list.d/grafana.list
 sudo apt-get update
 ```
+
+Grafana is configured to listen on port **4000**, so visit `http://<your-server-ip>:4000` after the setup completes.
 
