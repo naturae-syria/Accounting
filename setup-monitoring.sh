@@ -65,11 +65,17 @@ EOL
 # تشغيل الخدمات
 sudo systemctl enable prometheus
 sudo systemctl start prometheus
+
+# Configure Grafana to listen on port 4000 before starting the service
+echo "Configuring Grafana port..."
+sudo sed -i "s/^;\?\s*http_port *=.*/http_port = 4000/" /etc/grafana/grafana.ini
+echo "GF_SERVER_HTTP_PORT=4000" | sudo tee -a /etc/default/grafana-server > /dev/null
+
 sudo systemctl enable grafana-server
 sudo systemctl start grafana-server
 
 echo "Prometheus and Grafana set up successfully!"
-echo "You can access Grafana at: http://your-server-ip:3000"
+echo "You can access Grafana at: http://your-server-ip:4000"
 echo "Default username: admin"
 echo "Default password: admin"
 echo "For security, log in to Grafana and change the admin password immediately."
