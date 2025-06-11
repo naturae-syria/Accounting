@@ -73,6 +73,13 @@ environment.
 ```bash
 pnpm run init-db
 ```
+This command runs `ts-node -P tsconfig.init.json ./lib/db.ts` which tests the
+database connection, creates the tables and seeds example data. You can also run
+the same command manually if needed:
+
+```bash
+ts-node -P tsconfig.init.json ./lib/db.ts
+```
 
 **Note**: If `psql` reports `FATAL: role "root" does not exist`, use the
 `postgres` role to connect:
