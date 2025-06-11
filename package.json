@@ -8,7 +8,7 @@
     "start": "ts-node server.ts",
     "lint": "next lint",
     "init-db": "ts-node -P tsconfig.init.json ./lib/db.ts",
-    "migrate-db": "ts-node ./run-migrations.ts",
+    "migrate-db": "ts-node -P tsconfig.init.json ./run-migrations.ts",
     "test": "tsx --test",
     "postinstall": "./download-fonts.sh"
   },
