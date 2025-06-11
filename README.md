@@ -51,7 +51,7 @@ pnpm install
 The Tajawal font files will be downloaded automatically during installation
 and placed under `public/fonts/Tajawal`.
 
-3. Copy `.env.example` to `.env` (or export the variables in your shell) and update the values as needed:
+3. Copy `.env.example` to `.env` (or export the variables in your shell) and update the values as needed. These credentials are used to create the initial admin account and will be hashed before storage:
 
 ```env
 DB_USER=postgres
@@ -60,6 +60,8 @@ DB_NAME=accounting_system
 DB_PASSWORD=postgres
 DB_PORT=5432
 REDIS_URL=redis://localhost:6379
+ADMIN_USER=your_admin_user      # set a secure username
+ADMIN_PASS=your_admin_password  # set a strong password
 ```
 
 4. Initialize the database:
@@ -89,6 +91,7 @@ For production build and start:
 pnpm build
 pnpm start
 ```
+The `start` command now runs an Express server that hosts the Next.js application and authentication API.
 By default the server listens on port 3000. Open `http://localhost:3000` in your browser (or replace `localhost` with your server's IP or domain).
 If you define the `NEXT_BASE_PATH` environment variable when building, append that path to the URL (e.g. `http://localhost:3000$NEXT_BASE_PATH`).
 
