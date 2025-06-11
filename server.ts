@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import next from 'next'
 import cookieParser from 'cookie-parser'
 import { env } from './lib/env'
@@ -32,9 +32,9 @@ nextApp.prepare().then(() => {
   app.use(express.json())
   app.use(cookieParser())
 
-  app.post('/api/auth/login', async (req, res) => {
+  app.post('/api/auth/login', async (req: Request, res: Response) => {
     const { username, password } = req.body || {}
-    if (!recordAttempt(req.ip)) {
+    if (!recordAttempt(req.ip ?? '')) {
       return res.status(429).json({ success: false })
     }
     try {
@@ -55,7 +55,7 @@ nextApp.prepare().then(() => {
     }
   })
 
-  app.post('/api/auth/logout', (_req, res) => {
+  app.post('/api/auth/logout', (_req: Request, res: Response) => {
     res.cookie('session', '', {
       httpOnly: true,
       secure: true,
@@ -65,12 +65,12 @@ nextApp.prepare().then(() => {
     res.end()
   })
 
-  app.get('/api/auth/check', (req, res) => {
+  app.get('/api/auth/check', (req: Request, res: Response) => {
     const valid = req.cookies.session === 'auth'
     res.json({ valid })
   })
 
-  app.all('*', (req, res) => handle(req, res))
+  app.all('*', (req: Request, res: Response) => handle(req, res))
 
   const port = Number(process.env.PORT || 3000)
   const host = process.env.HOSTNAME || '0.0.0.0'
