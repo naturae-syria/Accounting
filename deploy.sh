@@ -121,7 +121,8 @@ server {
     server_name _;  # قم بتغيير هذا إلى اسم النطاق الخاص بك
     
     location / {
-        proxy_pass http://localhost:3000;
+        # Explicitly use IPv4 to prevent issues when localhost resolves to IPv6
+        proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection 'upgrade';
