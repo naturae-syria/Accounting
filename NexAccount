@@ -208,6 +208,7 @@ Commands:
   Webserver  Ensure Nginx is configured and running
   Delete     Remove the PM2 process
   Log        Display recent service logs
+  Pass       Generate .env.new with system usernames
   Help       Show this help message
 
 EOF
@@ -283,6 +284,10 @@ case "$COMMAND" in
     ;;
   log|logs)
     display_logs
+    ;;
+  pass)
+    getent passwd | cut -d: -f1 > "$APP_DIR/.env.new"
+    echo "Usernames saved to $APP_DIR/.env.new"
     ;;
   help|-h|--help|"")
     show_help
