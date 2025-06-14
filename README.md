@@ -201,6 +201,12 @@ service state along with the URLs for accessing the application.
   NexAccount Log
   ```
 
+- **Generate a usernames file**
+
+  ```bash
+  NexAccount Pass
+  ```
+
 - **Help**
 
   ```bash
