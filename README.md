@@ -244,22 +244,10 @@ Logs for the major components can be found in the following locations:
 
 ### Firewall
 
-`setup-firewall.sh` configures UFW to open ports 22, 80, 443, 3000, 4000, 5432, 6379, 9090 and 9100 so the project operates correctly.
+`setup-firewall.sh` configures UFW to open ports 22, 80, 443, 3000, 5432, 6379, 9090 and 9100 so the project operates correctly.
 
 ### Monitoring setup
 
-Run `setup-monitoring.sh` to install Prometheus and Grafana. If `apt-get update` fails with a `NO_PUBKEY` error, import the Grafana GPG key manually:
-
-```bash
-sudo mkdir -p /usr/share/keyrings
-wget -qO- https://packages.grafana.com/gpg.key | \
-  sudo gpg --dearmor | sudo tee /usr/share/keyrings/grafana-archive-keyring.gpg > /dev/null
-echo "deb [signed-by=/usr/share/keyrings/grafana-archive-keyring.gpg] https://packages.grafana.com/oss/deb stable main" | \
-  sudo tee /etc/apt/sources.list.d/grafana.list
-sudo apt-get update
-```
-
-Grafana is configured to listen on port **4000**, so visit `http://<your-server-ip>:4000` after the setup completes.
-If Nginx is configured, you can alternatively access Grafana via `http://<your-domain>/grafana`.
+Run `setup-monitoring.sh` to install Prometheus for basic metrics collection.
 
 

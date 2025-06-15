@@ -12,7 +12,6 @@ sudo ufw allow 22
 sudo ufw allow 80
 sudo ufw allow 443
 sudo ufw allow 3000
-sudo ufw allow 4000
 # Restrict database and Redis ports to localhost only
 sudo ufw allow from 127.0.0.1 to any port 5432
 sudo ufw allow from 127.0.0.1 to any port 6379
